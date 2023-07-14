@@ -7,6 +7,7 @@ import { useSelector } from 'react-redux';
 import { CssBaseline, ThemeProvider } from '@mui/material';
 import { createTheme } from '@mui/material/styles';
 import { themeSettings } from './theme';
+import Hero from './pages/hero';
 
 function App() {
   const mode = useSelector(state => state.mode);
@@ -19,7 +20,8 @@ function App() {
         <ThemeProvider theme={theme}>
           <CssBaseline />
           <Routes>
-            <Route path='/' element={<LoginPage />} />
+            <Route path='/' element={<Hero />} />
+            <Route path='/auth' element={<LoginPage />} />
             <Route
               path='/home'
               element={isAuth ? <HomePage /> : <Navigate to='/' />}

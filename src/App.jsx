@@ -7,11 +7,12 @@ import { useSelector } from 'react-redux';
 import { CssBaseline, ThemeProvider } from '@mui/material';
 import { createTheme } from '@mui/material/styles';
 import { themeSettings } from './theme';
+import { Home } from './pages/Home';
 
 function App() {
   const mode = useSelector(state => state.mode);
   const theme = useMemo(() => createTheme(themeSettings(mode)), [mode]);
-  const isAuth = Boolean(useSelector(state => state.token));
+  const isAuth = Boolean(useSelector(state => state.authToken));
 
   return (
     <div className='app'>
@@ -19,14 +20,15 @@ function App() {
         <ThemeProvider theme={theme}>
           <CssBaseline />
           <Routes>
-            <Route path='/' element={<LoginPage />} />
+            <Route path='/' element={<Home />} />
+            <Route path='/auth' element={<LoginPage />} />
             <Route
               path='/home'
-              element={isAuth ? <HomePage /> : <Navigate to='/' />}
+              element={isAuth ? <HomePage /> : <Navigate to='/auth' />}
             />
             <Route
               path='/profile/:userId'
-              element={isAuth ? <ProfilePage /> : <Navigate to='/' />}
+              element={isAuth ? <ProfilePage /> : <Navigate to='/auth' />}
             />
           </Routes>
         </ThemeProvider>

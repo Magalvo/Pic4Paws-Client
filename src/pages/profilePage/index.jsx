@@ -11,14 +11,14 @@ import UserWidget from '../../pages/widgets/UserWidget';
 const ProfilePage = () => {
   const [user, setUser] = useState(null);
   const { userId } = useParams();
-  const token = useSelector(state => state.token);
-  const isNonMobileScreens = useMediaQuery('(min-width:1000px');
+  const authToken = useSelector(state => state.authToken);
+  const isNonMobileScreens = useMediaQuery('(min-width: 1000px)');
 
   const getUser = async () => {
     const response = await fetch(`http://localhost:3001/users/${userId}`, {
       method: 'GET',
       headers: {
-        Authorization: `Bearer ${token}`
+        Authorization: `Bearer ${authToken}`
       }
     });
     const data = await response.json();
@@ -27,7 +27,7 @@ const ProfilePage = () => {
 
   useEffect(() => {
     getUser();
-  }, []); //eslint-disable-line react-hooks/exhaustive-deps
+  }, [userId]); // Fetch user details whenever userId changes
 
   if (!user) return null;
 
@@ -42,7 +42,8 @@ const ProfilePage = () => {
         justifyContent='center'
       >
         <Box flexBasis={isNonMobileScreens ? '26%' : undefined}>
-          <UserWidget userId={userId} picturePath={user.picturePath} />
+          <UserWidget userId={userId} imgUrl={user.imgUrl} />{' '}
+          {/* Pass userId directly */}
           <Box m='2rem 0' />
           <FriendListWidget userId={userId} />
         </Box>
@@ -50,7 +51,7 @@ const ProfilePage = () => {
           flexBasis={isNonMobileScreens ? '42%' : undefined}
           mt={isNonMobileScreens ? undefined : '2rem'}
         >
-          <MyPostWidget picturePath={user.picturePath} />
+          <MyPostWidget imgUrl={user.imgUrl} />
           <Box m='2rem 0' />
           <PostsWidget userId={userId} isProfile />
         </Box>

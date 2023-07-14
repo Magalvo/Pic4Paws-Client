@@ -20,7 +20,7 @@ const PostWidget = ({
   name,
   description,
   location,
-  picturePath,
+  imgUrl,
   userPicturePath,
   likes,
   comments
@@ -29,7 +29,7 @@ const PostWidget = ({
   const [isComments, setIsComments] = useState(false);
   const loggedInUserId = useSelector(state => state.user._id);
   const isLiked = Boolean(likes[loggedInUserId]);
-  const token = useSelector(state => state.token);
+  const authToken = useSelector(state => state.authToken);
   const likeCount = Object.keys(likes).length;
 
   const { palette } = useTheme();
@@ -40,7 +40,7 @@ const PostWidget = ({
     const response = await fetch(`http://localhost:3001/posts/${postId}/like`, {
       method: 'PATCH',
       headers: {
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${authToken}`,
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({ userId: loggedInUserId })
@@ -62,13 +62,13 @@ const PostWidget = ({
         {description}
       </Typography>
 
-      {picturePath && (
+      {imgUrl && (
         <img
           width='100%'
           height='auto'
           alt='post'
           style={{ borderRadius: '0.75rem', marginTop: '0.75rem' }}
-          src={`http://localhost:3001/assets/${picturePath}`}
+          src={`http://localhost:3001/assets/${imgUrl}`}
         />
       )}
       <FlexBetween mt='0.25rem'>

@@ -5,13 +5,13 @@ import { setFriends } from '../state/index.js';
 import FlexBetween from '../components/flexBetween.jsx';
 import UserImage from '../components/userImage.jsx';
 import { useNavigate } from 'react-router-dom';
-
+import axios from 'axios';
 // eslint-disable-next-line react/prop-types
 const Friend = ({ friendId, name, subtitle, userPicturePath }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { _id } = useSelector(state => state.user);
-  const token = useSelector(state => state.token);
+  const authToken = useSelector(state => state.authToken);
   const friends = useSelector(state => state.user.friends);
 
   const { palette } = useTheme();
@@ -23,19 +23,25 @@ const Friend = ({ friendId, name, subtitle, userPicturePath }) => {
   const isFriend = friends.find(friend => friend._id === friendId);
 
   const patchFriend = async () => {
-    const response = await fetch(
-      `http://localhost:3001/users/${_id}/${friendId}`,
-      {
-        method: 'PATCH',
-        headers: {
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/json'
+    try {
+      const response = await axios.patch(
+        `http://localhost:3001/users/${_id}/${friendId}`,
+        null,
+        {
+          headers: {
+            Authorization: `Bearer ${authToken}`,
+            'Content-Type': 'application/json'
+          }
         }
-      }
-    );
-    const data = await response.json();
-    dispatch(setFriends({ friends: data }));
+      );
+      const data = response.data;
+      dispatch(setFriends({ friends: data }));
+    } catch (error) {
+      // Handle any errors that occur during the request
+      console.error('An error occurred when fetching the friends', error);
+    }
   };
+
   return (
     <FlexBetween>
       <FlexBetween gap='1rem'>

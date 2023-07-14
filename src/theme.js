@@ -30,7 +30,7 @@ export const colorTokens = {
 };
 
 // mui theme settings
-export const themeSettings = mode => {
+export const themeSettings = (mode, backgroundImage) => {
   return {
     palette: {
       mode: mode,
@@ -100,6 +100,19 @@ export const themeSettings = mode => {
       h6: {
         fontFamily: ['Rubik', 'sans-serif'].join(','),
         fontSize: 14
+      }
+    },
+    components: {
+      MuiBox: {
+        styleOverrides: {
+          root: {
+            backgroundImage: backgroundImage
+              ? `url(${backgroundImage})`
+              : 'none',
+            backgroundSize: 'cover',
+            backgroundPosition: 'center'
+          }
+        }
       }
     }
   };

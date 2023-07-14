@@ -9,7 +9,7 @@ import PostsWidget from '../../pages/widgets/PostsWidget';
 
 const HomePage = () => {
   const isNonMobileScreens = useMediaQuery('(min-width:1000px)');
-  const { _id, picturePath } = useSelector(state => state.user);
+  const _id = useSelector(state => state.user?._id);
 
   return (
     <Box>
@@ -22,13 +22,13 @@ const HomePage = () => {
         justifyContent='space-between'
       >
         <Box flexBasis={isNonMobileScreens ? '26%' : undefined}>
-          <UserWidget userId={_id} picturePath={picturePath} />
+          <UserWidget userId={_id} />
         </Box>
         <Box
           flexBasis={isNonMobileScreens ? '42%' : undefined}
           mt={isNonMobileScreens ? undefined : '2rem'}
         >
-          <MyPostWidget picturePath={picturePath} />
+          <MyPostWidget />
           <PostsWidget userId={_id} />
         </Box>
         {isNonMobileScreens && (

@@ -9,7 +9,7 @@ import { setFriends } from '../../state/index.js';
 const FriendListWidget = ({ userId }) => {
   const dispatch = useDispatch();
   const { palette } = useTheme();
-  const token = useSelector(state => state.token);
+  const authToken = useSelector(state => state.authToken);
   const friends = useSelector(state => state.user.friends);
 
   const getFriends = async () => {
@@ -17,7 +17,7 @@ const FriendListWidget = ({ userId }) => {
       `http://localhost:3001/users/${userId}/friends`,
       {
         method: 'GET',
-        headers: { Authorization: `Bearer ${token}` }
+        headers: { Authorization: `Bearer ${authToken}` }
       }
     );
     const data = await response.json();
@@ -40,9 +40,9 @@ const FriendListWidget = ({ userId }) => {
             <Friend
               key={friend._id}
               friendId={friend._id}
-              name={`${friend.firstName} ${friend.lastName}`}
+              name={`${friend.firstName} `}
               subtitle={friend.occupation}
-              userPicturePath={friend.picturePath}
+              userPicturePath={friend.imgUrl}
             />
           ))}
         </Box>

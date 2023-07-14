@@ -1,6 +1,7 @@
 import { Box } from '@mui/material';
+import Paw from '../assets/images/Patinha.png';
 
-const UserImage = ({ image, size = '60px' }) => {
+const UserImage = ({ size = '60px' }) => {
   return (
     <Box width={size} height={size}>
       <img
@@ -8,7 +9,7 @@ const UserImage = ({ image, size = '60px' }) => {
         width={size}
         height={size}
         alt='user'
-        src={`http://localhost:3001/assets/${image}`}
+        src={Paw}
       />
     </Box>
   );

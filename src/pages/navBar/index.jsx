@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import {
   Box,
   IconButton,
@@ -21,9 +21,10 @@ import {
   Close
 } from '@mui/icons-material';
 import { useDispatch, useSelector } from 'react-redux';
-import { setMode, setLogout } from '../../state/index.js';
+import { setMode } from '../../state/index.js';
 import { useNavigate } from 'react-router-dom';
 import FlexBetween from '../../components/flexBetween';
+import { AuthContext } from '../../context/auth.context.jsx';
 
 const Navbar = () => {
   const [isMobileMenuToggled, setIsMobileMenuToggled] = useState(false);
@@ -31,6 +32,7 @@ const Navbar = () => {
   const navigate = useNavigate();
   const user = useSelector(state => state.user);
   const isNonMobileScreens = useMediaQuery('(min-width: 1000px)');
+  const { isLoggedIn, logOutUser } = useContext(AuthContext);
 
   const theme = useTheme();
   const neutralLight = theme.palette.neutral.light;
@@ -182,9 +184,7 @@ const Navbar = () => {
                 <MenuItem value={fullName}>
                   <Typography>{fullName}</Typography>
                 </MenuItem>
-                <MenuItem onClick={() => dispatch(setLogout())}>
-                  Log Out
-                </MenuItem>
+                <MenuItem onClick={logOutUser}>Log Out</MenuItem>
               </Select>
             </FormControl>
           </FlexBetween>

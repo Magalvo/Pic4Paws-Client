@@ -15,11 +15,11 @@ import FlexBetween from '../../components/flexBetween';
 import UserImage from '../../components/userImage';
 
 // eslint-disable-next-line react/prop-types
-const UserWidget = ({ userId, picturePath }) => {
+const UserWidget = ({ userId, imgUrl }) => {
   const [user, setUser] = useState(null);
   const { palette } = useTheme();
   const navigate = useNavigate();
-  const token = useSelector(state => state.token);
+  const authToken = useSelector(state => state.authToken);
   const dark = palette.neutral.dark;
   const medium = palette.neutral.medium;
   const main = palette.neutral.main;
@@ -27,15 +27,14 @@ const UserWidget = ({ userId, picturePath }) => {
   const getUser = async () => {
     const response = await fetch(`http://localhost:3001/users/${userId}`, {
       method: 'GET',
-      headers: { Authorization: `Bearer ${token}` }
+      headers: { Authorization: `Bearer ${authToken}` }
     });
     const data = await response.json();
     setUser(data);
   };
-
   useEffect(() => {
     getUser();
-  }, []); //eslint-disable-line react-hooks/exhaustive-deps
+  }, [userId, authToken]); //eslint-disable-line react-hooks/exhaustive-deps
 
   if (!user) {
     return null;
@@ -60,7 +59,7 @@ const UserWidget = ({ userId, picturePath }) => {
         onClick={() => navigate(`/profile/${userId}`)}
       >
         <FlexBetween gap='1rem'>
-          <UserImage image={picturePath} />
+          <UserImage />
           <Box>
             <Typography
               variant='h4'

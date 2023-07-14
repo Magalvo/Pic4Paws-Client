@@ -7,12 +7,12 @@ import PostWidget from '../widgets/PostWidget.jsx';
 const PostsWidget = ({ userId, isProfile = false }) => {
   const dispatch = useDispatch();
   const posts = useSelector(state => state.posts);
-  const token = useSelector(state => state.token);
+  const authToken = useSelector(state => state.authToken);
 
   const getPosts = async () => {
     const response = await fetch('http://localhost:3001/posts', {
       method: 'GET',
-      headers: { Authorization: `Bearer ${token}` }
+      headers: { Authorization: `Bearer ${authToken}` }
     });
     const data = await response.json();
     dispatch(setPosts({ posts: data }));
@@ -23,7 +23,7 @@ const PostsWidget = ({ userId, isProfile = false }) => {
       `http://localhost:3001/posts/${userId}/posts`,
       {
         method: 'GET',
-        headers: { Authorization: `Bearer ${token}` }
+        headers: { Authorization: `Bearer ${authToken}` }
       }
     );
     const data = await response.json();
@@ -48,7 +48,7 @@ const PostsWidget = ({ userId, isProfile = false }) => {
           lastName,
           description,
           location,
-          picturePath,
+          imgUrl,
           userPicturePath,
 
           likes,
@@ -58,10 +58,10 @@ const PostsWidget = ({ userId, isProfile = false }) => {
             key={_id}
             postId={_id}
             postUserId={userId}
-            name={`${firstName} ${lastName}`}
+            name={`${firstName} `}
             description={description}
             location={location}
-            picturePath={picturePath}
+            imgUrl={imgUrl}
             userPicturePath={userPicturePath}
             likes={likes}
             comments={comments}

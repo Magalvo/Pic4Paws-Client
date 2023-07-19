@@ -123,7 +123,7 @@ const PetsWidget = () => {
     <div>
       <h1>Pets</h1>
       <Grid
-        className={classes.container}
+        sx={{ display: 'flex', alignItem: 'center' }}
         container
         alignItems='stretch'
         spacing={3}

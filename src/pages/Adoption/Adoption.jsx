@@ -15,16 +15,11 @@ const Adoption = () => {
       <Navbar />
       <Grow in>
         <Container>
-          <Typography
-            variant='h2'
-            color='inherit'
-            align='center'
-            className={classes.heading}
-          >
+          <Typography variant='h2' color='inherit' align='center'>
             Adopt a 4 Paws
           </Typography>
           <Grid
-            className={classes.mainContainer}
+            className='gridContainer'
             container
             direction='column-reverse'
             justify-content='space-between'

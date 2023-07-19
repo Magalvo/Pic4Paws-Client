@@ -1,12 +1,12 @@
 import { Box, Typography } from '@mui/material';
-import { useStyles } from './styles';
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import { getPet, removePet } from '../../api/pets.api';
 import patinha from '../../assets/images/Patinha.png';
+import './Styles.css';
+
 export const PetDetails = () => {
-  const classes = useStyles();
   const [pet, setPet] = useState(null);
   const [image, setImage] = useState('');
   const [age, setAge] = useState('');

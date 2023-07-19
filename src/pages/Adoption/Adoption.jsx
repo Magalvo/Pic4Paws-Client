@@ -1,14 +1,14 @@
 import { useState, useEffect } from 'react';
 import { Container, Grow, Grid, Typography } from '@mui/material';
-import useStyles from './styles';
+
 import PetsWidget from '../widgets/PetsWidget/PetsWidget';
 import PetForm from '../widgets/PetForm';
+import './Styles.css';
 
 import Navbar from '../navBar/index';
 
 const Adoption = () => {
   const [currentId, setCurrentId] = useState(0);
-  const classes = useStyles();
 
   return (
     <>

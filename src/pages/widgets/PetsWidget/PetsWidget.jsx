@@ -1,16 +1,14 @@
 import { useState, useEffect } from 'react';
-
 import { getPets } from '../../../api/pets.api';
 import axios from 'axios';
 import PetWidget from '../petWidget/PetWidget';
 import { Grid } from '@mui/material';
-import useStyles from './styles';
+import './Styles.css';
 
 const PetsWidget = () => {
   const [pets, setPets] = useState([]);
   const [randomPet, setRandomPet] = useState([]);
   const [bearerToken, setBearerToken] = useState('');
-  const classes = useStyles();
 
   //________________________________ PET FINDER API PETS_______________________________//
   const fetchBearerToken = async () => {

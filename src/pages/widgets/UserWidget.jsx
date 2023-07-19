@@ -6,16 +6,18 @@ import {
 } from '@mui/icons-material';
 
 import { Box, Typography, Divider, useTheme } from '@mui/material';
-
+import axios from 'axios';
 import WidgetWrapper from '../../components/WidgetWrapper';
 import { useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import FlexBetween from '../../components/flexBetween';
 import UserImage from '../../components/userImage';
+import { getId } from '../../api/users.api';
+import Loading from '../../components/Loading';
 
 // eslint-disable-next-line react/prop-types
-const UserWidget = ({ userId, imgUrl }) => {
+const UserWidget = () => {
   const [user, setUser] = useState(null);
   const { palette } = useTheme();
   const navigate = useNavigate();
@@ -23,21 +25,20 @@ const UserWidget = ({ userId, imgUrl }) => {
   const dark = palette.neutral.dark;
   const medium = palette.neutral.medium;
   const main = palette.neutral.main;
+  const userId = localStorage.getItem('userId');
 
   const getUser = async () => {
-    const response = await fetch(`http://localhost:3001/users/${userId}`, {
-      method: 'GET',
-      headers: { Authorization: `Bearer ${authToken}` }
-    });
-    const data = await response.json();
+    const response = await getId(userId);
+    const data = response.data;
     setUser(data);
   };
+
   useEffect(() => {
     getUser();
   }, [userId, authToken]); //eslint-disable-line react-hooks/exhaustive-deps
 
   if (!user) {
-    return null;
+    return <Loading />;
   }
 
   const {
@@ -59,7 +60,7 @@ const UserWidget = ({ userId, imgUrl }) => {
         onClick={() => navigate(`/profile/${userId}`)}
       >
         <FlexBetween gap='1rem'>
-          <UserImage />
+          <UserImage userId={userId} />
           <Box>
             <Typography
               variant='h4'

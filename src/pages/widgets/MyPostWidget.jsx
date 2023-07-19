@@ -19,6 +19,8 @@ import {
   useMediaQuery
 } from '@mui/material';
 
+import { useParams } from 'react-router-dom';
+
 import Dropzone from 'react-dropzone';
 import FlexBetween from '../../components/flexBetween';
 import UserImage from '../../components/userImage';
@@ -26,44 +28,47 @@ import WidgetWrapper from '../../components/WidgetWrapper';
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { setPosts } from '../../state/index.js';
+import { upload, addPost } from '../../api/posts.api';
 
 // eslint-disable-next-line react/prop-types
-const MyPostWidget = ({ imgUrl }) => {
+const MyPostWidget = () => {
   const dispatch = useDispatch();
   const [isImage, setIsImage] = useState(false);
   const [image, setImage] = useState(null);
+  const [isAttachment, setIsAttachment] = useState(false);
+  const [attachment, setAttachment] = useState(null);
+
   const [post, setPost] = useState('');
   const { palette } = useTheme();
-  const _id = useSelector(state => state.user?._id);
-  const authToken = useSelector(state => state.authToken);
+  const userId = localStorage.getItem('userId');
   const isNonMobileScreens = useMediaQuery('(min-width: 1000px)');
   const mediumMain = palette.neutral.mediumMain;
   const medium = palette.neutral.medium;
 
   const handlePost = async () => {
-    const formData = new FormData();
-    formData.append('userId', _id);
-    formData.append('description', post);
+    const newPost = { description: post };
+
     if (image) {
-      formData.append('picture', image);
-      formData.append('imgUrl', image.name);
+      const uploadData = new FormData();
+      uploadData.append('file', image);
+      const response = await upload(uploadData);
+      newPost.imgUrl = response.data.fileUrl;
     }
 
-    const response = await fetch(`http://localhost:3001/posts`, {
-      method: 'POST',
-      headers: { Authorization: `Bearer ${authToken}` },
-      body: formData
-    });
-    const posts = await response.json();
+    newPost.userId = userId;
+
+    const response = await addPost(newPost);
+    const posts = response.data;
     dispatch(setPosts({ posts }));
     setImage(null);
+    setAttachment(null);
     setPost('');
   };
 
   return (
     <WidgetWrapper>
       <FlexBetween gap='1.5rem'>
-        <UserImage />
+        <UserImage userId={userId} />
         <InputBase
           placeholder="What's on your mind..."
           onChange={e => setPost(e.target.value)}
@@ -121,6 +126,51 @@ const MyPostWidget = ({ imgUrl }) => {
         </Box>
       )}
 
+      {isAttachment && (
+        <Box
+          border={`1px solid ${medium}`}
+          borderRadius='5px'
+          mt='1rem'
+          p='1rem'
+        >
+          <Dropzone
+            acceptedFiles='.jpg,.jpeg,.png'
+            multiple={false}
+            onDrop={acceptedFiles => setAttachment(acceptedFiles[0])}
+          >
+            {({ getRootProps, getInputProps }) => (
+              <FlexBetween>
+                <Box
+                  {...getRootProps()}
+                  border={`2px dashed ${palette.primary.main}`}
+                  p='1rem'
+                  width='100%'
+                  sx={{ '&:hover': { cursor: 'pointer' } }}
+                >
+                  <input {...getInputProps()} />
+                  {!attachment ? (
+                    <Typography>Add Attachment Here</Typography>
+                  ) : (
+                    <FlexBetween>
+                      <Typography>{attachment.name}</Typography>
+                      <EditOutlined />
+                    </FlexBetween>
+                  )}
+                </Box>
+                {attachment && (
+                  <IconButton
+                    onClick={() => setAttachment(null)}
+                    sx={{ width: '15%' }}
+                  >
+                    <DeleteOutlined />
+                  </IconButton>
+                )}
+              </FlexBetween>
+            )}
+          </Dropzone>
+        </Box>
+      )}
+
       <Divider sx={{ margin: '1.25rem 0' }} />
 
       <FlexBetween>
@@ -134,22 +184,39 @@ const MyPostWidget = ({ imgUrl }) => {
           </Typography>
         </FlexBetween>
 
+        {/*  <Divider sx={{ margin: '1.25rem 0' }} /> */}
+
+        <FlexBetween
+          gap='0.25rem'
+          onClick={() => setIsAttachment(!isAttachment)}
+        >
+          <AttachFileOutlined sx={{ color: mediumMain }} />
+          <Typography
+            color={mediumMain}
+            sx={{ '&:hover': { cursor: 'pointer', color: medium } }}
+          >
+            Attachment
+          </Typography>
+        </FlexBetween>
+
+        {/* /<Divider sx={{ margin: '1.25rem 0' }} /> */}
+
         {isNonMobileScreens ? (
           <>
-            <FlexBetween gap='0.25rem'>
+            {/* <FlexBetween gap='0.25rem'>
               <GifBoxOutlined sx={{ color: mediumMain }} />
               <Typography color={mediumMain}>Clip</Typography>
-            </FlexBetween>
+            </FlexBetween> */}
 
-            <FlexBetween gap='0.25rem'>
+            {/*    <FlexBetween gap='0.25rem'>
               <AttachFileOutlined sx={{ color: mediumMain }} />
               <Typography color={mediumMain}>Attachment</Typography>
-            </FlexBetween>
+            </FlexBetween> */}
 
-            <FlexBetween gap='0.25rem'>
+            {/*  <FlexBetween gap='0.25rem'>
               <MicOutlined sx={{ color: mediumMain }} />
               <Typography color={mediumMain}>Audio</Typography>
-            </FlexBetween>
+            </FlexBetween> */}
           </>
         ) : (
           <FlexBetween gap='0.25rem'>

@@ -1,4 +1,4 @@
-import { BrowserRouter, Navigate, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import HomePage from './pages/homePage';
 import LoginPage from './pages/loginPage';
 import ProfilePage from './pages/profilePage';
@@ -7,8 +7,13 @@ import { useSelector } from 'react-redux';
 import { CssBaseline, ThemeProvider } from '@mui/material';
 import { createTheme } from '@mui/material/styles';
 import { themeSettings } from './theme';
-import { Home } from './pages/Home';
+import IsPrivate from './components/isPrivate';
+
 import Hero from './pages/hero';
+import IsLogged from './components/isLogged';
+import Adoption from './pages/Adoption/Adoption';
+import { PetDetails } from './pages/PetDetails/PetDetails';
+import CatSelection from './pages/CatBreeds/CatSelection';
 
 function App() {
   const mode = useSelector(state => state.mode);
@@ -22,15 +27,39 @@ function App() {
           <CssBaseline />
           <Routes>
             <Route path='/' element={<Hero />} />
-            <Route path='/auth' element={<LoginPage />} />
+
+            <Route
+              path='/auth'
+              element={
+                <IsLogged>
+                  <LoginPage />
+                </IsLogged>
+              }
+            />
+
             <Route
               path='/home'
-              element={isAuth ? <HomePage /> : <Navigate to='/auth' />}
+              element={
+                <IsPrivate>
+                  <HomePage />{' '}
+                </IsPrivate>
+              }
             />
+
+            <Route path='/pets' element={<Adoption />} />
+
+            <Route path='/pets/:id' element={<PetDetails />} />
+
             <Route
               path='/profile/:userId'
-              element={isAuth ? <ProfilePage /> : <Navigate to='/auth' />}
+              element={
+                <IsPrivate>
+                  <ProfilePage />
+                </IsPrivate>
+              }
             />
+
+            <Route path='/cats' element={<CatSelection />} />
           </Routes>
         </ThemeProvider>
       </BrowserRouter>

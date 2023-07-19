@@ -50,7 +50,7 @@ const HeroNav = () => {
       {isNonMobileScreens ? (
         <FlexBetween gap='2rem'>
           <NavLink
-            to='/adopt'
+            to='/pets'
             style={{ textDecoration: 'none', color: 'white' }}
           >
             Adopt

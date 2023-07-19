@@ -21,7 +21,7 @@ import {
   Close
 } from '@mui/icons-material';
 import { useDispatch, useSelector } from 'react-redux';
-import { setMode, setLogout } from '../state/index.js';
+import { setMode } from '../state/index.js';
 import { NavLink, useNavigate } from 'react-router-dom';
 import FlexBetween from '../components/flexBetween.jsx';
 import Logo from '../assets/images/logiz.png';
@@ -56,7 +56,7 @@ const HomeNav = () => {
       {isNonMobileScreens ? (
         <FlexBetween gap='2rem'>
           <NavLink
-            to='/adopt'
+            to='/pets'
             sx={{
               transition: 'color 0.3s',
               '&:hover': {
@@ -161,7 +161,7 @@ const HomeNav = () => {
             gap='3rem'
           >
             <NavLink
-              to='/adopt'
+              to='/pets'
               style={{
                 textDecoration: 'none',
 
@@ -169,7 +169,7 @@ const HomeNav = () => {
                 fontWeight: 'bold'
               }}
             >
-              Adopt
+              Pets
             </NavLink>
             <IconButton
               onClick={() => dispatch(setMode())}

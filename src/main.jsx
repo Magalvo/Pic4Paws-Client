@@ -4,7 +4,7 @@ import App from './App.jsx';
 import './index.css';
 import { setUser } from './state/index.js';
 import authSliceReducer from './state/index.js';
-import { configureStore, getDefaultMiddleware } from '@reduxjs/toolkit';
+import { configureStore } from '@reduxjs/toolkit';
 import { Provider } from 'react-redux';
 import {
   persistStore,
@@ -43,11 +43,21 @@ store.dispatch(
   setUser({ isLoggedIn: false, isLoading: true, user: null, authToken: null })
 );
 
+const persistor = persistStore(store, null, () => {
+  // This callback will be called after the persistence is complete
+  // You can perform additional actions here if needed
+});
+
+// Clear the persisted state when the browser or window is closed
+window.addEventListener('beforeunload', () => {
+  persistor.purge();
+});
+
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <Provider store={store}>
       <AuthProviderWrapper>
-        <PersistGate loading={null} persistor={persistStore(store)}>
+        <PersistGate loading={null} persistor={persistor}>
           <App />
         </PersistGate>
       </AuthProviderWrapper>

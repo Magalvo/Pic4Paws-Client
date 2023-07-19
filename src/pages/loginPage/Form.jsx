@@ -81,7 +81,7 @@ const Form = () => {
     }
   };
 
-  const login = async (values, onSubmitProps) => {
+  const login = async values => {
     try {
       const user = {
         email: values.email,
@@ -89,21 +89,22 @@ const Form = () => {
       };
 
       const response = await signin(user);
-      const loggedIn = response.data;
 
-      if (loggedIn) {
-        await signInEmailPassword(loggedIn.authToken);
-        dispatch(
-          setUser({
-            user: loggedIn.user,
-            authToken: loggedIn.authToken
-          })
-        );
-        //loggedIn.user contains the user information
-        // The authToken is passed as loggedIn.authToken
+      await signInEmailPassword(response.data.authToken);
 
-        navigate('/home');
-      }
+      const loggedInUser = response.data.userId;
+
+      // Store the user ID in localStorage
+      localStorage.setItem('userId', loggedInUser);
+      dispatch(
+        setUser({
+          user: response.data.user,
+          authToken: response.data.authToken
+        })
+      );
+      //loggedIn.user contains the user information
+      // The authToken is passed as loggedIn.authToken
+      navigate('/home');
     } catch (error) {
       console.error('Error login in', error);
     }

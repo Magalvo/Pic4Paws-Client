@@ -1,31 +1,35 @@
 import { Box, Typography, useTheme } from '@mui/material';
 import Friend from '../../components/Friend';
 import WidgetWrapper from '../../components/WidgetWrapper';
-import { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { setFriends } from '../../state/index.js';
+import { useEffect, useState } from 'react';
+import { getUserFriends, patchingFriend } from '../../api/users.api';
 
-// eslint-disable-next-line react/prop-types
 const FriendListWidget = ({ userId }) => {
-  const dispatch = useDispatch();
+  const [friends, setFriends] = useState([]);
   const { palette } = useTheme();
-  const authToken = useSelector(state => state.authToken);
-  const friends = useSelector(state => state.user.friends);
 
   const getFriends = async () => {
-    const response = await fetch(
-      `http://localhost:3001/users/${userId}/friends`,
-      {
-        method: 'GET',
-        headers: { Authorization: `Bearer ${authToken}` }
-      }
-    );
-    const data = await response.json();
-    dispatch(setFriends({ friends: data }));
+    try {
+      const response = await getUserFriends(userId);
+      const data = response.data;
+      setFriends(data);
+    } catch (error) {
+      console.error('An error occurred when fetching the friends', error);
+    }
   };
+
   useEffect(() => {
     getFriends();
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  }, []); // Fetch friends when userId changes
+
+  const handlePatchFriend = async friendId => {
+    try {
+      await patchingFriend(userId, friendId);
+      getFriends(); // Fetch the updated friends list after patching
+    } catch (error) {
+      console.error('An error occurred when patching the friend', error);
+    }
+  };
 
   return (
     <WidgetWrapper>
@@ -40,9 +44,10 @@ const FriendListWidget = ({ userId }) => {
             <Friend
               key={friend._id}
               friendId={friend._id}
-              name={`${friend.firstName} `}
+              name={friend.firstName}
               subtitle={friend.occupation}
               userPicturePath={friend.imgUrl}
+              patchFriend={handlePatchFriend}
             />
           ))}
         </Box>

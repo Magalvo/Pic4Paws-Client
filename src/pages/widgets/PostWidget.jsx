@@ -13,6 +13,7 @@ import WidgetWrapper from '../../components/WidgetWrapper';
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { setPost } from '../../state/index.js';
+import { liking } from '../../api/posts.api';
 
 const PostWidget = ({
   postId,
@@ -27,7 +28,8 @@ const PostWidget = ({
 }) => {
   const dispatch = useDispatch();
   const [isComments, setIsComments] = useState(false);
-  const loggedInUserId = useSelector(state => state.user._id);
+  //const loggedInUserId = useSelector(state => state.user._id);
+  const loggedInUserId = localStorage.getItem('userId');
   const isLiked = Boolean(likes[loggedInUserId]);
   const authToken = useSelector(state => state.authToken);
   const likeCount = Object.keys(likes).length;
@@ -37,15 +39,8 @@ const PostWidget = ({
   const primary = palette.neutral.medium;
 
   const patchLike = async () => {
-    const response = await fetch(`http://localhost:3001/posts/${postId}/like`, {
-      method: 'PATCH',
-      headers: {
-        Authorization: `Bearer ${authToken}`,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ userId: loggedInUserId })
-    });
-    const updatedPost = await response.json();
+    const response = await liking(postId, loggedInUserId);
+    const updatedPost = response.data;
     dispatch(setPost({ post: updatedPost }));
   };
 
@@ -68,7 +63,7 @@ const PostWidget = ({
           height='auto'
           alt='post'
           style={{ borderRadius: '0.75rem', marginTop: '0.75rem' }}
-          src={`http://localhost:3001/assets/${imgUrl}`}
+          src={imgUrl}
         />
       )}
       <FlexBetween mt='0.25rem'>

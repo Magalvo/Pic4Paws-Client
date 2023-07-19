@@ -1,16 +1,35 @@
 import { Box } from '@mui/material';
-import Paw from '../assets/images/Patinha.png';
+import { getId } from '../api/users.api';
+import { useState, useEffect } from 'react';
 
-const UserImage = ({ size = '60px' }) => {
+// eslint-disable-next-line react/prop-types
+const UserImage = ({ userId, size = '60px' }) => {
+  const [imgUrl, setImgUrl] = useState('');
+
+  const fetchImage = async () => {
+    try {
+      const response = await getId(userId);
+      const Img = response.data.imgUrl;
+      setImgUrl(Img);
+    } catch (error) {
+      console.log('Error fetching uer image', error);
+    }
+  };
+  useEffect(() => {
+    fetchImage();
+  }, [userId]);
+
   return (
     <Box width={size} height={size}>
-      <img
-        style={{ objectFit: 'cover', borderRadius: '50%' }}
-        width={size}
-        height={size}
-        alt='user'
-        src={Paw}
-      />
+      {imgUrl && (
+        <img
+          style={{ objectFit: 'cover', borderRadius: '50%' }}
+          width={size}
+          height={size}
+          alt='user'
+          src={imgUrl}
+        />
+      )}
     </Box>
   );
 };

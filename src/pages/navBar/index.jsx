@@ -20,19 +20,19 @@ import {
   Menu,
   Close
 } from '@mui/icons-material';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { setMode } from '../../state/index.js';
 import { useNavigate } from 'react-router-dom';
 import FlexBetween from '../../components/flexBetween';
 import { AuthContext } from '../../context/auth.context.jsx';
+import { NavLink } from 'react-router-dom';
 
 const Navbar = () => {
   const [isMobileMenuToggled, setIsMobileMenuToggled] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const user = useSelector(state => state.user);
   const isNonMobileScreens = useMediaQuery('(min-width: 1000px)');
-  const { isLoggedIn, logOutUser } = useContext(AuthContext);
+  const { stateUser, logOutUser } = useContext(AuthContext);
 
   const theme = useTheme();
   const neutralLight = theme.palette.neutral.light;
@@ -40,8 +40,9 @@ const Navbar = () => {
   const background = theme.palette.background.default;
   const primaryLight = theme.palette.primary.light;
   const alt = theme.palette.background.alt;
+  const User = localStorage.getItem('User');
 
-  const fullName = `${user.firstName} ${user.lastName}`;
+  const fullName = `${User.firstName}`;
 
   return (
     <FlexBetween padding='1rem 6%' backgroundColor={alt}>
@@ -85,6 +86,7 @@ const Navbar = () => {
               <LightMode sx={{ color: dark, fontSize: '25px' }} />
             )}
           </IconButton>
+          <NavLink to='/pets'>Adopt</NavLink>
           <Message sx={{ fontSize: '25px' }} />
           <Notifications sx={{ fontSize: '25px' }} />
           <Help sx={{ fontSize: '25px' }} />
@@ -109,7 +111,7 @@ const Navbar = () => {
               <MenuItem value={fullName}>
                 <Typography>{fullName}</Typography>
               </MenuItem>
-              <MenuItem onClick={() => dispatch(setLogout())}>Log Out</MenuItem>
+              <MenuItem onClick={logOutUser}>Log Out</MenuItem>
             </Select>
           </FormControl>
         </FlexBetween>

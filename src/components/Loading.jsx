@@ -12,11 +12,15 @@ const Loading = () => {
   };
   const isNonMobileScreens = useMediaQuery('(min-width: 1000px)');
   return (
-    <Box className='animation'>
+    <Box
+      className='animation'
+      display='flex'
+      justifyContent='center'
+      alignItems='center'
+      height='100vh'
+    >
       <Box
-        backgroundColor='white'
         style={{
-          backgroundColor: 'white',
           position: 'relative'
         }}
       >

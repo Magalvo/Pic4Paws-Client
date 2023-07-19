@@ -100,8 +100,8 @@ const WhoAreWe = () => {
               <Lottie
                 options={defaultOptions}
                 animationData={Lot2}
-                height={600}
-                width={600}
+                height={200}
+                width={200}
               />
             </Box>
             <Typography variant='h2' fontWeight='bold' color='#1e3156'>

@@ -6,7 +6,7 @@ import {
 } from '../config/firebase.config';
 import { signupGoogle } from '../api/auth.api.js';
 import { useDispatch, useSelector } from 'react-redux';
-import { setUser } from '../state/index.js';
+import { setUser, setPosts } from '../state/index.js';
 
 const AuthContext = createContext();
 
@@ -60,12 +60,18 @@ export const AuthProviderWrapper = props => {
       } else {
         const { claims } = await user.getIdTokenResult();
         const loggedInUser = {
-          firstName: claims.name,
+          firstName: claims.firstName,
+          lastName: claims.lastName,
           email: claims.email
         };
         stateSetUser(loggedInUser);
+
+        const loggedInUserJson = JSON.stringify(loggedInUser);
+        localStorage.setItem('User', loggedInUserJson);
+
         const authToken = await user.getIdToken();
         localStorage.setItem('authToken', authToken);
+
         dispatch(
           setUser({
             isLoggedIn: true,
@@ -83,10 +89,12 @@ export const AuthProviderWrapper = props => {
     try {
       const userCredential = await signInWithGoogle();
       const additionalInfo = getAdditionalInfo(userCredential);
+      console.log(userCredential.user.photoURL);
       if (additionalInfo.isNewUser) {
         await signupGoogle({
           firstName: userCredential.user.displayName,
-          email: userCredential.user.email
+          email: userCredential.user.email,
+          imgUrl: userCredential.user.photoURL
         });
       }
     } catch (error) {
@@ -95,8 +103,11 @@ export const AuthProviderWrapper = props => {
   };
 
   const removeToken = () => {
-    dispatch(setUser({ authToken: null }));
+    dispatch(setUser({ authToken: null, user: null }));
+    dispatch(setPosts({ posts: [] }));
     localStorage.removeItem('authToken');
+    localStorage.removeItem('userId');
+    localStorage.removeItem('User');
     auth.signOut();
   };
 

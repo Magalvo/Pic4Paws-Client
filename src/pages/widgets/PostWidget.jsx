@@ -3,17 +3,26 @@ import {
   ChatBubbleOutlineOutlined,
   FavoriteBorderOutlined,
   FavoriteOutlined,
-  ShareOutlined
+  ShareOutlined,
+  SendOutlined
 } from '@mui/icons-material';
 
-import { Box, Divider, IconButton, Typography, useTheme } from '@mui/material';
+import {
+  Box,
+  Divider,
+  IconButton,
+  Typography,
+  useTheme,
+  InputAdornment,
+  TextField
+} from '@mui/material';
 import FlexBetween from '../../components/flexBetween';
 import Friend from '../../components/Friend';
 import WidgetWrapper from '../../components/WidgetWrapper';
 import { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { setPost } from '../../state/index.js';
-import { liking } from '../../api/posts.api';
+import { liking, addComment } from '../../api/posts.api';
 
 const PostWidget = ({
   postId,
@@ -28,10 +37,12 @@ const PostWidget = ({
 }) => {
   const dispatch = useDispatch();
   const [isComments, setIsComments] = useState(false);
+  const [commentText, setCommentText] = useState('');
   //const loggedInUserId = useSelector(state => state.user._id);
   const loggedInUserId = localStorage.getItem('userId');
-  const isLiked = Boolean(likes[loggedInUserId]);
-  const authToken = useSelector(state => state.authToken);
+  const [postLikes, setPostLikes] = useState(likes);
+  //const isLiked = Boolean(likes[loggedInUserId]);
+
   const likeCount = Object.keys(likes).length;
 
   const { palette } = useTheme();
@@ -41,8 +52,33 @@ const PostWidget = ({
   const patchLike = async () => {
     const response = await liking(postId, loggedInUserId);
     const updatedPost = response.data;
+    setPostLikes(updatedPost.likes);
     dispatch(setPost({ post: updatedPost }));
   };
+
+  const handleCommentSubmit = async event => {
+    event.preventDefault();
+
+    if (commentText.trim() === '') {
+      return;
+    }
+
+    try {
+      const response = await addComment(postId, loggedInUserId, commentText);
+      const updatedPost = response.data;
+      setCommentText('');
+      setIsComments(true);
+      dispatch(setPost({ post: updatedPost }));
+    } catch (error) {
+      console.error('Error adding comment:', error);
+    }
+  };
+
+  /* const patchLike = async () => {
+    const response = await liking(postId, loggedInUserId);
+    const updatedPost = response.data;
+    dispatch(setPost({ post: updatedPost }));
+  }; */
 
   return (
     <WidgetWrapper m='2rem 0'>
@@ -70,7 +106,7 @@ const PostWidget = ({
         <FlexBetween gap='1rem'>
           <FlexBetween gap='0.3rem'>
             <IconButton onClick={patchLike}>
-              {isLiked ? (
+              {postLikes[loggedInUserId] ? (
                 <FavoriteOutlined sx={{ color: primary }} />
               ) : (
                 <FavoriteBorderOutlined />
@@ -92,14 +128,32 @@ const PostWidget = ({
       {isComments && (
         <Box mt='0.5rem'>
           {comments.map((comment, i) => (
-            <Box key={`${name}-${i}`}>
+            <Box key={i}>
               <Divider />
               <Typography sx={{ color: main, m: '0.5rem 0', pl: '1rem' }}>
-                {comment}
+                {comment.comment}
               </Typography>
             </Box>
           ))}
           <Divider />
+          <form onSubmit={handleCommentSubmit}>
+            <TextField
+              fullWidth
+              variant='outlined'
+              placeholder='Write a comment...'
+              value={commentText}
+              onChange={e => setCommentText(e.target.value)}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position='end'>
+                    <IconButton type='submit'>
+                      <SendOutlined />
+                    </IconButton>
+                  </InputAdornment>
+                )
+              }}
+            />
+          </form>
         </Box>
       )}
     </WidgetWrapper>

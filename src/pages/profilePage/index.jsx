@@ -12,6 +12,7 @@ import Loading from '../../components/Loading';
 
 const ProfilePage = () => {
   const [user, setUser] = useState(null);
+  const [userImage, setUserImage] = useState(null);
   const { userId } = useParams();
   const isNonMobileScreens = useMediaQuery('(min-width: 1000px)');
 
@@ -20,6 +21,7 @@ const ProfilePage = () => {
       const response = await getId(userId);
       const data = response.data;
       setUser(data);
+      setUserImage(data.imgUrl);
     };
     getUser();
   }, [userId]); // Fetch user details whenever userId changes
@@ -37,18 +39,18 @@ const ProfilePage = () => {
         justifyContent='center'
       >
         <Box flexBasis={isNonMobileScreens ? '26%' : undefined}>
-          <UserWidget userId={id} imgUrl={user.imgUrl} />{' '}
+          <UserWidget userId={userId} imgUrl={userImage} />{' '}
           {/* Pass userId directly */}
           <Box m='2rem 0' />
-          <FriendListWidget userId={id} />
+          <FriendListWidget userId={userId} />
         </Box>
         <Box
           flexBasis={isNonMobileScreens ? '42%' : undefined}
           mt={isNonMobileScreens ? undefined : '2rem'}
         >
-          <MyPostWidget imgUrl={user.imgUrl} />
+          <MyPostWidget imgUrl={userImage} />
           <Box m='2rem 0' />
-          <PostsWidget userId={id} isProfile />
+          <PostsWidget userId={userId} isProfile />
         </Box>
       </Box>
     </Box>

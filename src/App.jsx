@@ -8,6 +8,7 @@ import { CssBaseline, ThemeProvider } from '@mui/material';
 import { createTheme } from '@mui/material/styles';
 import { themeSettings } from './theme';
 import IsPrivate from './components/isPrivate';
+import PetDetailsCh from './pages/PetDetails/PetDetailsCh';
 
 import Hero from './pages/hero';
 import IsLogged from './components/isLogged';
@@ -48,7 +49,7 @@ function App() {
 
             <Route path='/pets' element={<Adoption />} />
 
-            <Route path='/pets/:id' element={<PetDetails />} />
+            <Route path='/pets/:id' element={<PetDetailsCh />} />
 
             <Route
               path='/profile/:userId'

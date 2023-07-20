@@ -19,6 +19,7 @@ import {
 import storage from 'redux-persist/lib/storage';
 import { PersistGate } from 'redux-persist/integration/react';
 import { AuthProviderWrapper } from './context/auth.context.jsx';
+import { ChakraProvider } from '@chakra-ui/react';
 
 const persistConfig = {
   key: 'root',
@@ -58,7 +59,9 @@ ReactDOM.createRoot(document.getElementById('root')).render(
     <Provider store={store}>
       <AuthProviderWrapper>
         <PersistGate loading={null} persistor={persistor}>
-          <App />
+          <ChakraProvider>
+            <App />
+          </ChakraProvider>
         </PersistGate>
       </AuthProviderWrapper>
     </Provider>

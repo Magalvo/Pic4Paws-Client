@@ -96,10 +96,12 @@ const Form = () => {
 
       // Store the user ID in localStorage
       localStorage.setItem('userId', loggedInUser);
+
       dispatch(
         setUser({
           user: response.data.user,
-          authToken: response.data.authToken
+          authToken: response.data.authToken,
+          friends: response.data.friends
         })
       );
       //loggedIn.user contains the user information

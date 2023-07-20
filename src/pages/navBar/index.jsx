@@ -20,7 +20,7 @@ import {
   Menu,
   Close
 } from '@mui/icons-material';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { setMode } from '../../state/index.js';
 import { useNavigate } from 'react-router-dom';
 import FlexBetween from '../../components/flexBetween';
@@ -41,8 +41,9 @@ const Navbar = () => {
   const primaryLight = theme.palette.primary.light;
   const alt = theme.palette.background.alt;
   const User = localStorage.getItem('User');
+  const user = useSelector(state => state.user);
 
-  const fullName = `${User.firstName}`;
+  const fullName = `${user.firstName}`;
 
   return (
     <FlexBetween padding='1rem 6%' backgroundColor={alt}>

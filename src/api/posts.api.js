@@ -27,13 +27,10 @@ export const userPosts = userId => {
   return axios.post(`${baseURL}/${userId}/posts`);
 };
 
-export const liking = (postId, loggedInUser) => {
-  return (
-    axios.patch(`${baseURL}/${postId}/like`),
-    {
-      userId: loggedInUser
-    }
-  );
+export const liking = async (postId, loggedInUser) => {
+  return axios.patch(`${baseURL}/${postId}/like`, {
+    userId: loggedInUser
+  });
 };
 
 export const upload = uploadData => {
@@ -42,4 +39,16 @@ export const upload = uploadData => {
 
 export const addPost = formData => {
   return axios.post(`${baseURL}/create`, formData);
+};
+
+export const addComment = async (postId, loggedInUserId, commentText) => {
+  try {
+    return await axios.post(`${baseURL}/${postId}/comment`, {
+      userId: loggedInUserId,
+      commentText: commentText
+    });
+  } catch (error) {
+    console.error('Error creating comment:', error);
+    throw error; // Rethrow the error to handle it in the calling function
+  }
 };

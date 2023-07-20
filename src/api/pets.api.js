@@ -1,6 +1,23 @@
 import axios from 'axios';
 
-const baseURL = `http://localhost:3001/pets`;
+const baseURL = `${import.meta.env.VITE_BASE_URL}/pets`;
+
+const setAuthorizationHeaders = () => {
+  axios.interceptors.request.use(config => {
+    if (!config.url.startsWith(baseURL)) {
+      return config;
+    }
+    //retrieve the JWT from the local storage
+    const storedToken = localStorage.getItem('authToken');
+
+    if (storedToken) {
+      config.headers = { Authorization: `Bearer ${storedToken}` };
+    }
+    return config;
+  });
+};
+
+setAuthorizationHeaders();
 
 export const getPets = async () => {
   return axios.get(`${baseURL}/`);

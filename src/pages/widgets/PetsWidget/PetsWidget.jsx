@@ -23,7 +23,9 @@ const PetsWidget = () => {
     try {
       const response = await axios.post(
         'https://api.petfinder.com/v2/oauth2/token',
-        'grant_type=client_credentials&client_id=cfPM5m5BGWaI1rdwkyiChizENcXVFaxcNVLuvUJm3vbLPIW7tm&client_secret=J0kHg81Fn8sq02RUNeLF39REeSDSsbGU7ruqFACX',
+        `grant_type=client_credentials&client_id=${
+          import.meta.env.VITE_PET_ID
+        }&client_secret=${import.meta.env.VITE_PET_SECRET}`,
         {
           headers: {
             'Content-Type': 'application/x-www-form-urlencoded'
@@ -133,6 +135,19 @@ const PetsWidget = () => {
             <PetWidget pet={pet} />
           </Grid>
         ))}
+      </Grid>
+      <Grid
+        sx={{ display: 'flex', alignItem: 'center' }}
+        container
+        alignItems='stretch'
+        spacing={3}
+      >
+        {randomPet.animals &&
+          randomPet.animals.map(pet => (
+            <Grid item key={pet._id} xs={12} sm={6} md={6}>
+              <PetWidget pet={pet} />
+            </Grid>
+          ))}
       </Grid>
     </div>
   );

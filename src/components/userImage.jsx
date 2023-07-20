@@ -3,7 +3,7 @@ import { getId } from '../api/users.api';
 import { useState, useEffect } from 'react';
 
 // eslint-disable-next-line react/prop-types
-const UserImage = ({ userId, size = '60px' }) => {
+const UserImage = ({ userId, size = '40px' }) => {
   const [imgUrl, setImgUrl] = useState('');
 
   const fetchImage = async () => {

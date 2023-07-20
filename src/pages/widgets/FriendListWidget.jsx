@@ -1,18 +1,25 @@
 import { Box, Typography, useTheme } from '@mui/material';
 import Friend from '../../components/Friend';
 import WidgetWrapper from '../../components/WidgetWrapper';
-import { useEffect, useState } from 'react';
-import { getUserFriends, patchingFriend } from '../../api/users.api';
+import { useEffect } from 'react';
+import { getUserFriends } from '../../api/users.api';
+import { useDispatch, useSelector } from 'react-redux';
+import { setFriends } from '../../state/index.js';
 
 const FriendListWidget = ({ userId }) => {
-  const [friends, setFriends] = useState([]);
+  const dispatch = useDispatch();
   const { palette } = useTheme();
+  const friends = useSelector(state => state.user.friends);
 
   const getFriends = async () => {
     try {
       const response = await getUserFriends(userId);
       const data = response.data;
-      setFriends(data);
+
+      console.log('This are my friends:', data);
+
+      console.log(data);
+      dispatch(setFriends({ friends: data }));
     } catch (error) {
       console.error('An error occurred when fetching the friends', error);
     }
@@ -21,15 +28,6 @@ const FriendListWidget = ({ userId }) => {
   useEffect(() => {
     getFriends();
   }, []); // Fetch friends when userId changes
-
-  const handlePatchFriend = async friendId => {
-    try {
-      await patchingFriend(userId, friendId);
-      getFriends(); // Fetch the updated friends list after patching
-    } catch (error) {
-      console.error('An error occurred when patching the friend', error);
-    }
-  };
 
   return (
     <WidgetWrapper>
@@ -40,16 +38,16 @@ const FriendListWidget = ({ userId }) => {
         sx={{ mb: '1.5rem' }}
       >
         <Box display='flex' flexDirection='column' gap='1.5rem'>
-          {friends.map(friend => (
-            <Friend
-              key={friend._id}
-              friendId={friend._id}
-              name={friend.firstName}
-              subtitle={friend.occupation}
-              userPicturePath={friend.imgUrl}
-              patchFriend={handlePatchFriend}
-            />
-          ))}
+          {friends &&
+            friends.map(friend => (
+              <Friend
+                key={friend._id}
+                friendId={friend._id}
+                name={friend.firstName}
+                subtitle={friend.occupation}
+                userPicturePath={friend.imgUrl}
+              />
+            ))}
         </Box>
       </Typography>
     </WidgetWrapper>

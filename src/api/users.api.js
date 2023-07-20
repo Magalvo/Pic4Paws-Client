@@ -1,7 +1,22 @@
 import axios from 'axios';
 
-const baseURL = `${import.meta.env.VITE_BASE_URL}/users`;
+export const baseURL = `${import.meta.env.VITE_BASE_URL}/users`;
 
+const setAuthorizationHeaders = () => {
+  axios.interceptors.request.use(config => {
+    if (!config.url.startsWith(baseURL)) {
+      return config;
+    }
+    //retrieve the JWT from the local storage
+    const storedToken = localStorage.getItem('authToken');
+
+    if (storedToken) {
+      config.headers = { Authorization: `Bearer ${storedToken}` };
+    }
+    return config;
+  });
+};
+setAuthorizationHeaders();
 export const getId = async userId => {
   return axios.get(`${baseURL}/${userId}`);
 };

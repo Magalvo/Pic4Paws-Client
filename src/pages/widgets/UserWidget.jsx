@@ -15,6 +15,7 @@ import FlexBetween from '../../components/flexBetween';
 import UserImage from '../../components/userImage';
 import { getId } from '../../api/users.api';
 import Loading from '../../components/Loading';
+import LoaderDiv from '../../components/Skeleton';
 
 // eslint-disable-next-line react/prop-types
 const UserWidget = () => {

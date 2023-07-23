@@ -6,6 +6,12 @@ const setAuthorizationHeaders = () => {
   axios.interceptors.request.use(config => {
     if (!config.url.startsWith(baseURL)) {
       return config;
+    } else if (config.url.startsWith(`${import.meta.env.VITE_PET_URL}`)) {
+      const bearer = localStorage.getItem('bearerToken');
+
+      if (bearer) {
+        config.headers = { Authorization: `Bearer ${bearer}` };
+      }
     }
     //retrieve the JWT from the local storage
     const storedToken = localStorage.getItem('authToken');

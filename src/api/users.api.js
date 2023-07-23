@@ -16,7 +16,15 @@ const setAuthorizationHeaders = () => {
     return config;
   });
 };
+
 setAuthorizationHeaders();
+
+export const findEmail = async userEmail => {
+  return axios.get(`${baseURL}/`, {
+    userEmail: userEmail
+  });
+};
+
 export const getId = async userId => {
   return axios.get(`${baseURL}/${userId}`);
 };

@@ -1,4 +1,4 @@
-import { Component } from 'react';
+/* import { Component } from 'react';
 import axios from 'axios';
 import './Styles.css';
 
@@ -83,3 +83,4 @@ class CatSelection extends Component {
 }
 
 export default CatSelection;
+ */

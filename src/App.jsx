@@ -9,12 +9,15 @@ import { createTheme } from '@mui/material/styles';
 import { themeSettings } from './theme';
 import IsPrivate from './components/isPrivate';
 import PetDetailsCh from './pages/PetDetails/PetDetailsCh';
+import PetDetails from './pages/PetDetails/myPetDetails/PetDetails';
 
 import Hero from './pages/hero';
 import IsLogged from './components/isLogged';
 import Adoption from './pages/Adoption/Adoption';
-import { PetDetails } from './pages/PetDetails/PetDetails';
-import CatSelection from './pages/CatBreeds/CatSelection';
+
+import NoPage from './pages/404';
+import Messenger from './pages/Messenger/Messenger';
+import PetDetailsApi from './pages/PetDetails/petDetailsApi/PetDetailsApi';
 
 function App() {
   const mode = useSelector(state => state.mode);
@@ -49,8 +52,9 @@ function App() {
 
             <Route path='/pets' element={<Adoption />} />
 
-            <Route path='/pets/:id' element={<PetDetailsCh />} />
-
+            <Route path='/pets/:id' element={<PetDetails />} />
+            {/*  <Route path='/petsAPI/:id' element */}
+            <Route path='/animals/:id' element={<PetDetailsApi />} />
             <Route
               path='/profile/:userId'
               element={
@@ -60,7 +64,8 @@ function App() {
               }
             />
 
-            <Route path='/cats' element={<CatSelection />} />
+            <Route path='/messenger' element={<Messenger />} />
+            <Route path='/*' element={<NoPage />} />
           </Routes>
         </ThemeProvider>
       </BrowserRouter>

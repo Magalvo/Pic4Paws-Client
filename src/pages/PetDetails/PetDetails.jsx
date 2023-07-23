@@ -21,7 +21,6 @@ export const PetDetails = () => {
       setImage(response.data.profilePicture);
       setDescription(response.data.petDescription);
       setAge(response.data.age);
-      console.log(pet);
     } catch (e) {
       console.log('Error Fetching Project', e);
     }

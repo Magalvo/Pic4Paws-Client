@@ -16,9 +16,6 @@ const FriendListWidget = ({ userId }) => {
       const response = await getUserFriends(userId);
       const data = response.data;
 
-      console.log('This are my friends:', data);
-
-      console.log(data);
       dispatch(setFriends({ friends: data }));
     } catch (error) {
       console.error('An error occurred when fetching the friends', error);

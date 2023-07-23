@@ -39,7 +39,6 @@ export const AuthProviderWrapper = props => {
         user.providerData[0].providerId === 'google.com'
       ) {
         const loggedInUser = {
-          _id: user.uid,
           firstName: user.displayName,
           email: user.email
         };
@@ -61,7 +60,6 @@ export const AuthProviderWrapper = props => {
         const { claims } = await user.getIdTokenResult();
         const loggedInUser = {
           firstName: claims.firstName,
-          lastName: claims.lastName,
           email: claims.email
         };
         stateSetUser(loggedInUser);
@@ -89,13 +87,17 @@ export const AuthProviderWrapper = props => {
     try {
       const userCredential = await signInWithGoogle();
       const additionalInfo = getAdditionalInfo(userCredential);
-      console.log(userCredential.user.photoURL);
+
       if (additionalInfo.isNewUser) {
-        await signupGoogle({
+        const userData = {
           firstName: userCredential.user.displayName,
           email: userCredential.user.email,
           imgUrl: userCredential.user.photoURL
-        });
+        };
+
+        const response = await signupGoogle(userData);
+        const userId = response.data._id;
+        localStorage.setItem('userId', userId);
       }
     } catch (error) {
       console.log('Error authenticating with Google', error);

@@ -4,6 +4,7 @@ import axios from 'axios';
 import PetWidget from '../petWidget/PetWidget';
 import { Grid } from '@mui/material';
 import './Styles.css';
+import PetApiWidget from '../../widgets/petApiWidget/petApiWidget';
 
 const PetsWidget = () => {
   const [pets, setPets] = useState([]);
@@ -136,7 +137,7 @@ const PetsWidget = () => {
           </Grid>
         ))}
       </Grid>
-      <Grid
+      {/* <Grid
         sx={{ display: 'flex', alignItem: 'center' }}
         container
         alignItems='stretch'
@@ -145,10 +146,10 @@ const PetsWidget = () => {
         {randomPet.animals &&
           randomPet.animals.map(pet => (
             <Grid item key={pet._id} xs={12} sm={6} md={6}>
-              <PetWidget pet={pet} />
+              <PetApiWidget pet={pet} />
             </Grid>
           ))}
-      </Grid>
+      </Grid> */}
     </div>
   );
 };

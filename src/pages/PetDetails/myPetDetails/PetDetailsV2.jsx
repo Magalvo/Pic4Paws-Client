@@ -8,21 +8,9 @@ import PostsWidget from '../../pages/widgets/PostsWidget';
 import { useSelector } from 'react-redux';
 import { findEmail } from '../../api/users.api';
 
-const HomePage = () => {
+const TestingPage = () => {
   const isNonMobileScreens = useMediaQuery('(min-width:1000px)');
   const userId = localStorage.getItem('userId');
-  const userEmail = useSelector(state => state.user.email);
-  console.log('This is the user email:', userEmail);
-
-  const findByEmail = async () => {
-    const user = await findEmail(userEmail);
-    console.log('This is the response', user);
-    const response = user.data;
-
-    localStorage.setItem('UserIds', response._id);
-  };
-
-  findByEmail();
 
   return (
     <Box>
@@ -34,15 +22,12 @@ const HomePage = () => {
         gap='0.5rem'
         justifyContent='space-between'
       >
-        <Box flexBasis={isNonMobileScreens ? '26%' : undefined}>
-          <UserWidget userId={userId} />
-        </Box>
         <Box
-          flexBasis={isNonMobileScreens ? '42%' : undefined}
+          justifyContent='center'
+          flexBasis={isNonMobileScreens ? '90%' : undefined}
           mt={isNonMobileScreens ? undefined : '2rem'}
         >
-          <MyPostWidget />
-          <PostsWidget userId={userId} />
+        
         </Box>
         {isNonMobileScreens && (
           <Box flexBasis='26%'>
@@ -56,4 +41,4 @@ const HomePage = () => {
   );
 };
 
-export default HomePage;
+export default TestingPage;

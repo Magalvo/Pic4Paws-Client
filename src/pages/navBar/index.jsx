@@ -29,10 +29,12 @@ import { NavLink } from 'react-router-dom';
 
 const Navbar = () => {
   const [isMobileMenuToggled, setIsMobileMenuToggled] = useState(false);
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const isNonMobileScreens = useMediaQuery('(min-width: 1000px)');
   const { stateUser, logOutUser } = useContext(AuthContext);
+  //const userName = useSelector(state => state.user.firstName);
 
   const theme = useTheme();
   const neutralLight = theme.palette.neutral.light;
@@ -40,10 +42,8 @@ const Navbar = () => {
   const background = theme.palette.background.default;
   const primaryLight = theme.palette.primary.light;
   const alt = theme.palette.background.alt;
-  const User = localStorage.getItem('User');
-  const user = useSelector(state => state.user);
 
-  const fullName = `${user.firstName}`;
+  const userName = stateUser?.firstName || '';
 
   return (
     <FlexBetween padding='1rem 6%' backgroundColor={alt}>
@@ -88,12 +88,15 @@ const Navbar = () => {
             )}
           </IconButton>
           <NavLink to='/pets'>Adopt</NavLink>
-          <Message sx={{ fontSize: '25px' }} />
+          <IconButton onClick={() => navigate('/messenger')}>
+            <Message sx={{ fontSize: '25px', color: dark }} />
+          </IconButton>
+
           <Notifications sx={{ fontSize: '25px' }} />
           <Help sx={{ fontSize: '25px' }} />
-          <FormControl variant='standard' value={fullName}>
+          <FormControl variant='standard' value={userName}>
             <Select
-              value={fullName}
+              value={userName}
               sx={{
                 backgroundColor: neutralLight,
                 width: '150px',
@@ -109,8 +112,8 @@ const Navbar = () => {
               }}
               input={<InputBase />}
             >
-              <MenuItem value={fullName}>
-                <Typography>{fullName}</Typography>
+              <MenuItem value={userName}>
+                <Typography>{userName}</Typography>
               </MenuItem>
               <MenuItem onClick={logOutUser}>Log Out</MenuItem>
             </Select>
@@ -166,9 +169,9 @@ const Navbar = () => {
             <Message sx={{ fontSize: '25px' }} />
             <Notifications sx={{ fontSize: '25px' }} />
             <Help sx={{ fontSize: '25px' }} />
-            <FormControl variant='standard' value={fullName}>
+            <FormControl variant='standard' value={userName}>
               <Select
-                value={fullName}
+                value={userName}
                 sx={{
                   backgroundColor: neutralLight,
                   width: '150px',
@@ -184,8 +187,8 @@ const Navbar = () => {
                 }}
                 input={<InputBase />}
               >
-                <MenuItem value={fullName}>
-                  <Typography>{fullName}</Typography>
+                <MenuItem value={userName}>
+                  <Typography>{userName}</Typography>
                 </MenuItem>
                 <MenuItem onClick={logOutUser}>Log Out</MenuItem>
               </Select>

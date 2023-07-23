@@ -22,8 +22,10 @@ const Messenger = () => {
   const [onlineUsers, setOnlineUsers] = useState([]);
   const [userInfo, setUserInfo] = useState(null);
   const user = useSelector(state => state.user); // Access the user object directly
-  const socket = useRef(io('ws://localhost:8900'));
+  const socket = useRef(io(`${import.meta.env.VITE_CHAT_URL}`));
   const scrollRef = useRef();
+
+  //ws://localhost:8900 env. instead of the render
 
   useEffect(() => {
     const User = async () => {
@@ -37,7 +39,7 @@ const Messenger = () => {
   console.log('User Info', userInfo);
 
   useEffect(() => {
-    socket.current = io('ws://localhost:8900');
+    socket.current = io(`${import.meta.env.VITE_CHAT_URL}`);
     socket.current.on('getMessage', data => {
       setArrivalMessage({
         sender: data.senderId,

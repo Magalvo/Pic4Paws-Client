@@ -1,12 +1,11 @@
+/* eslint-disable react/prop-types */
 import { Box, Typography } from '@mui/material';
-import UserImage from '../userImage';
 import './Styles.css';
 import { useEffect, useState } from 'react';
-import axios from 'axios';
 import { getId } from '../../api/users.api';
 
 const Conversations = ({ conversation, currentUser }) => {
-  const userId = localStorage.getItem('userId');
+  // eslint-disable-next-line no-unused-vars
   const [user, setUser] = useState(null);
   const [userImage, setUserImage] = useState(null);
   const [name, setName] = useState('');
@@ -17,7 +16,6 @@ const Conversations = ({ conversation, currentUser }) => {
     const getUser = async () => {
       try {
         const res = await getId(friendId);
-
         setUser(res.data);
         setUserImage(res.data.imgUrl);
         setName(res.data.firstName);

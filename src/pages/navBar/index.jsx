@@ -20,7 +20,7 @@ import {
   Menu,
   Close
 } from '@mui/icons-material';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { setMode } from '../../state/index.js';
 import { useNavigate } from 'react-router-dom';
 import FlexBetween from '../../components/flexBetween';
@@ -166,7 +166,9 @@ const Navbar = () => {
                 <LightMode sx={{ color: dark, fontSize: '25px' }} />
               )}
             </IconButton>
-            <Message sx={{ fontSize: '25px' }} />
+            <IconButton onClick={() => navigate('/messenger')}>
+              <Message sx={{ fontSize: '25px', color: dark }} />
+            </IconButton>
             <Notifications sx={{ fontSize: '25px' }} />
             <Help sx={{ fontSize: '25px' }} />
             <FormControl variant='standard' value={userName}>

@@ -4,13 +4,11 @@ import Navbar from '../navBar/index';
 import './Styles.css';
 import { Box, Button, InputBase, Typography } from '@mui/material';
 import ChatOnline from '../../components/ChatOnline/ChatOnline';
-import { useContext, useState, useEffect, useRef } from 'react';
-import axios from 'axios';
+import { useState, useEffect, useRef } from 'react';
 import { userConversations } from '../../api/conversations.api';
 import { sendMessage, userMessages } from '../../api/messages.api';
 import { io } from 'socket.io-client';
 import { getId } from '../../api/users.api';
-import { useSelector } from 'react-redux';
 
 const Messenger = () => {
   const userId = localStorage.getItem('userId');
@@ -21,7 +19,6 @@ const Messenger = () => {
   const [arrivalMessage, setArrivalMessage] = useState(null);
   const [onlineUsers, setOnlineUsers] = useState([]);
   const [userInfo, setUserInfo] = useState(null);
-  const user = useSelector(state => state.user); // Access the user object directly
   const socket = useRef(io(`${import.meta.env.VITE_CHAT_URL}`));
   const scrollRef = useRef();
 

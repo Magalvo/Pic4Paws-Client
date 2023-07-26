@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
-import Ping from '../assets/images/locaPiza.png';
+import Ping from '../assets/images/Pinga.png';
 
 const LocationMap = ({ lat, lng }) => {
   const [mapLoaded, setMapLoaded] = useState(false);

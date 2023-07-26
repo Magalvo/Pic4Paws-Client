@@ -29,9 +29,7 @@ const LocationMap = ({ lat, lng }) => {
 
   const customMarkerIcon = {
     url: Ping,
-    scaledSize: window.google?.maps?.Size
-      ? new window.google.maps.Size(1, 1)
-      : undefined
+    scaledSize: new window.google.maps.Size(1, 1)
   };
   console.log(customMarkerIcon);
 

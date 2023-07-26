@@ -12,7 +12,7 @@ const PetsWidget = () => {
   const [bearerToken, setBearerToken] = useState('');
 
   //________________________________ PET FINDER API PETS_______________________________//
-  const fetchBearerToken = async () => {
+  /* const fetchBearerToken = async () => {
     const storedToken = localStorage.getItem('bearerToken');
     const storedTokenExp = localStorage.getItem('bearerTokenExp');
 
@@ -106,7 +106,7 @@ const PetsWidget = () => {
       setBearerToken('');
     }
   }, []);
-
+ */
   //________________________________ MY API PETS_______________________________________//
   const fetchMyPets = async () => {
     try {
@@ -137,7 +137,7 @@ const PetsWidget = () => {
           </Grid>
         ))}
       </Grid>
-      <Grid
+      {/* <Grid
         sx={{ display: 'flex', alignItem: 'center' }}
         container
         alignItems='stretch'
@@ -149,7 +149,7 @@ const PetsWidget = () => {
               <PetApiWidget pet={pet} />
             </Grid>
           ))}
-      </Grid>
+      </Grid> */}
     </div>
   );
 };

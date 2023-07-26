@@ -12,7 +12,7 @@ const PetsWidget = () => {
   const [bearerToken, setBearerToken] = useState('');
 
   //________________________________ PET FINDER API PETS_______________________________//
-  /* const fetchBearerToken = async () => {
+  const fetchBearerToken = async () => {
     const storedToken = localStorage.getItem('bearerToken');
     const storedTokenExp = localStorage.getItem('bearerTokenExp');
 
@@ -105,7 +105,7 @@ const PetsWidget = () => {
       localStorage.removeItem('bearerTokenExp');
       setBearerToken('');
     }
-  }, []); */
+  }, []);
 
   //________________________________ MY API PETS_______________________________________//
   const fetchMyPets = async () => {

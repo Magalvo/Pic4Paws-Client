@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import axios from 'axios';
 
 import { Formik } from 'formik';
 import {
@@ -8,18 +8,29 @@ import {
   TextField,
   useMediaQuery,
   Typography,
-  useTheme
+  useTheme,
+  InputLabel,
+  Select,
+  MenuItem,
+  Grid,
+  Autocomplete,
+  FormControl
 } from '@mui/material';
 import Dropzone from 'react-dropzone';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import FlexBetween from '../../components/flexBetween';
 
 import { createPet, upload } from '../../api/pets.api';
+import MapComponent from '../../components/GoogleMaps';
 
-const PetForm = () => {
-  const [photos, setPhotos] = useState([]);
-
-  const navigate = useNavigate();
+const PetForm = ({ refreshList }) => {
+  //const [photos, setPhotos] = useState([]);
+  const [selectedImages, setSelectedImages] = useState([]);
+  const [breedSelectionVisible, setBreedSelectionVisible] = useState(false);
+  const [selectedLocation, setSelectedLocation] = useState(null);
+  const [catBreeds, setCatBreeds] = useState([]);
+  const [dogBreeds, setDogBreeds] = useState([]);
+  const [userLocation, setUserLocation] = useState(null);
   const { palette } = useTheme();
   const isNonMobile = useMediaQuery('(min-width: 600px)');
 
@@ -27,7 +38,7 @@ const PetForm = () => {
 
   const initialValues = {
     petDescription: '',
-    picture: '',
+    pictures: [],
     petName: '',
     petType: '',
     primaryBreed: '',
@@ -37,11 +48,43 @@ const PetForm = () => {
     age: ''
   };
 
+  const getCatBreeds = async () => {
+    const res = await axios('https://api.thecatapi.com/v1/breeds', {
+      headers: {
+        Authorization: `${import.meta.env.VITE_CAT_API}`
+      }
+    });
+    setCatBreeds(res.data);
+  };
+
+  useEffect(() => {
+    getCatBreeds().catch(error => {
+      // ...handle the error...
+      console.error('error fetching breeds', error);
+    });
+  }, []);
+
+  const getDogBreeds = async () => {
+    const res = await axios('https://api.thedogapi.com/v1/breeds', {
+      headers: {
+        Authorization: `${import.meta.env.VITE_CAT_API}`
+      }
+    });
+    setDogBreeds(res.data);
+  };
+
+  useEffect(() => {
+    getDogBreeds().catch(error => {
+      // ...handle the error...
+      console.error('error fetching breeds', error);
+    });
+  }, []);
+
   const handleSubmit = async (values, onSubmitProps) => {
     try {
       const newPet = {
         petDescription: values.petDescription,
-        picture: values.picture,
+        pictures: values.pictures,
         petName: values.petName,
         petType: values.petType,
         primaryBreed: values.primaryBreed,
@@ -50,14 +93,25 @@ const PetForm = () => {
         gender: values.gender,
         age: values.age
       };
-      if (newPet.picture) {
-        // Upload the image to Cloudinary
-        const uploadData = new FormData();
-        uploadData.append('file', newPet.picture);
-        const response = await upload(uploadData);
-        // Save the Cloudinary image URL instead of the file
-        console.log(response.data.fileUrl);
-        newPet.photos = [response.data.fileUrl];
+
+      if (selectedLocation) {
+        newPet.location = {
+          lat: selectedLocation.lat,
+          lng: selectedLocation.lng
+        };
+      }
+
+      if (newPet.pictures.length > 0) {
+        // Upload each image to Cloudinary
+        const uploadedUrls = await Promise.all(
+          newPet.pictures.map(async image => {
+            const uploadData = new FormData();
+            uploadData.append('file', image);
+            const response = await upload(uploadData);
+            return response.data.fileUrl;
+          })
+        );
+        newPet.photos = uploadedUrls;
       }
 
       newPet.userId = userId;
@@ -66,10 +120,32 @@ const PetForm = () => {
 
       const create = responseCreate.data;
       onSubmitProps.resetForm();
+      console.log(create);
+      refreshList();
     } catch (error) {
       console.log('Error Updating the Project', error);
     }
   };
+
+  const handleLocationSelect = selectedLocation => {
+    setSelectedLocation(selectedLocation);
+  };
+
+  useEffect(() => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        position => {
+          setUserLocation({
+            lat: position.coords.latitude,
+            lng: position.coords.longitude
+          });
+        },
+        error => {
+          console.error('Error getting user location:', error);
+        }
+      );
+    }
+  }, []);
 
   return (
     <>
@@ -80,156 +156,290 @@ const PetForm = () => {
           handleChange,
           handleSubmit,
           setFieldValue
-        }) => (
-          <Box>
-            <Typography
-              variant='h5'
-              color='#638bf1'
-              textAlign='center'
-              fontWeight='bold'
-              fontSize='2rem'
-              mb='1rem'
-            >
-              New Pet
-            </Typography>
-            <form onSubmit={handleSubmit}>
-              <Box
-                display='grid'
-                gap='30px'
-                gridTemplateColumns='repeat(4,minmax(0,1fr))'
-                sx={{
-                  '& > div': { gridColumn: isNonMobile ? undefined : 'span 4' }
-                }}
-              >
-                <TextField
-                  required
-                  placeholder='Pet Name'
-                  onBlur={handleBlur}
-                  onChange={handleChange}
-                  value={values.petName}
-                  name='petName'
-                  sx={{ gridColumn: 'span 2' }}
-                />
+        }) => {
+          const handleTypeChange = event => {
+            const selectedType = event.target.value;
+            setFieldValue('petType', selectedType);
 
-                <TextField
-                  required
-                  placeholder='Cat or Dog'
-                  autoFocus
-                  onBlur={handleBlur}
-                  onChange={handleChange}
-                  value={values.petType}
-                  name='petType'
-                  sx={{ gridColumn: 'span 2' }}
-                />
-                <TextField
-                  required
-                  placeholder='Gender'
-                  onBlur={handleBlur}
-                  onChange={handleChange}
-                  value={values.gender}
-                  name='gender'
-                  sx={{ gridColumn: 'span 4' }}
-                />
-                <TextField
-                  required
-                  placeholder='age'
-                  onBlur={handleBlur}
-                  onChange={handleChange}
-                  value={values.age}
-                  name='age'
-                  sx={{ gridColumn: 'span 4' }}
-                />
-                <Box
-                  gridColumn='span 4'
-                  border={`1px solid ${palette.neutral.medium}`}
-                  borderRadius='5px'
-                  p='1rem'
-                >
-                  <Dropzone
-                    acceptedFiles='.jpeg,.jpeg,.png'
-                    multiple={false}
-                    onDrop={acceptedFiles => {
-                      setFieldValue('picture', acceptedFiles[0]);
-                      setPhotos(acceptedFiles[0]);
+            // Check if the "Type" field has been selected and update the breedSelectionVisible state
+            if (
+              selectedType &&
+              (selectedType === 'Cat' || selectedType === 'Dog')
+            ) {
+              setBreedSelectionVisible(true);
+            } else {
+              setBreedSelectionVisible(false);
+            }
+          };
+
+          return (
+            <Box>
+              <Typography
+                variant='h5'
+                color='#638bf1'
+                textAlign='center'
+                fontWeight='bold'
+                fontSize='2rem'
+                mb='1rem'
+              >
+                Create a New 4 Paws
+              </Typography>
+              <form onSubmit={handleSubmit}>
+                <Grid container spacing={3}>
+                  <Grid item xs={12}>
+                    <TextField
+                      required
+                      fullWidth
+                      placeholder='Pet Name'
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      value={values.petName}
+                      name='petName'
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={4}>
+                    <FormControl fullWidth>
+                      <InputLabel id='gender-label'>Gender</InputLabel>
+                      <Select
+                        labelId='gender-label'
+                        id='gender-id'
+                        onBlur={handleBlur}
+                        value={values.gender}
+                        onChange={handleChange}
+                        label='Gender'
+                        name='gender'
+                      >
+                        <MenuItem value='Male'>Male</MenuItem>
+                        <MenuItem value='Female'>Female</MenuItem>
+                      </Select>
+                    </FormControl>
+                  </Grid>
+
+                  <Grid item xs={12} sm={4}>
+                    <FormControl fullWidth>
+                      <InputLabel id='type'>Type</InputLabel>
+                      <Select
+                        fullWidth
+                        labelId='type'
+                        id='demo-simple-select'
+                        onBlur={handleBlur}
+                        value={values.petType}
+                        label='Cat | Dog'
+                        onChange={handleTypeChange}
+                      >
+                        <MenuItem value='Cat'>Cat</MenuItem>
+                        <MenuItem value='Dog'>Dog</MenuItem>
+                      </Select>
+                    </FormControl>
+                  </Grid>
+                  <Grid item xs={12} sm={4}>
+                    <FormControl fullWidth>
+                      <InputLabel id='age'>Age</InputLabel>
+                      <Select
+                        fullWidth
+                        placeholder='Age'
+                        labelId='age'
+                        id='demo-simple-select'
+                        onBlur={handleBlur}
+                        value={values.age}
+                        label='Age'
+                        name='age'
+                        onChange={handleChange}
+                      >
+                        <MenuItem value='Baby'>Baby (0-1y)</MenuItem>
+                        <MenuItem value='Young'>Young (1-2y)</MenuItem>
+                        <MenuItem value='Adult'>Adult (3-8y)</MenuItem>
+                        <MenuItem value='Senior'>Senior (8y+)</MenuItem>
+                      </Select>
+                    </FormControl>
+                  </Grid>
+                  {/* Primary Breed */}
+                  <Grid item xs={12} sm={6}>
+                    {breedSelectionVisible && (
+                      <>
+                        {values.petType === 'Cat' ? (
+                          <>
+                            <Autocomplete
+                              id='catBreed'
+                              options={catBreeds}
+                              getOptionLabel={option => option.name}
+                              fullWidth
+                              value={values.primaryBreed}
+                              onChange={(event, newValue) =>
+                                setFieldValue('primaryBreed', newValue)
+                              }
+                              renderInput={params => (
+                                <TextField
+                                  {...params}
+                                  label='Primary Cat Breed'
+                                  variant='outlined'
+                                />
+                              )}
+                            />
+                          </>
+                        ) : (
+                          <>
+                            <Autocomplete
+                              id='dogBreed'
+                              options={dogBreeds}
+                              getOptionLabel={option => option.name}
+                              fullWidth
+                              value={values.primaryBreed}
+                              onChange={(event, newValue) =>
+                                setFieldValue('primaryBreed', newValue)
+                              }
+                              renderInput={params => (
+                                <TextField
+                                  {...params}
+                                  label='Primary Dog Breed'
+                                  variant='outlined'
+                                />
+                              )}
+                            />
+                          </>
+                        )}
+                      </>
+                    )}
+                  </Grid>
+                  {/* Secondary Breed */}
+                  <Grid item xs={12} sm={6}>
+                    {breedSelectionVisible && (
+                      <>
+                        {values.petType === 'Cat' ? (
+                          <>
+                            <Autocomplete
+                              id='catBreed'
+                              options={catBreeds}
+                              getOptionLabel={option => option.name}
+                              fullWidth
+                              value={values.secondaryBreed}
+                              onChange={(event, newValue) =>
+                                setFieldValue('secondaryBreed', newValue)
+                              }
+                              renderInput={params => (
+                                <TextField
+                                  {...params}
+                                  label='Secondary Cat Breed'
+                                  variant='outlined'
+                                />
+                              )}
+                            />
+                          </>
+                        ) : (
+                          <>
+                            <Autocomplete
+                              id='dogBreed'
+                              options={dogBreeds}
+                              getOptionLabel={option => option.name}
+                              fullWidth
+                              value={values.secondaryBreed}
+                              onChange={(event, newValue) =>
+                                setFieldValue('secondaryBreed', newValue)
+                              }
+                              renderInput={params => (
+                                <TextField
+                                  {...params}
+                                  label='Secondary Dog Breed'
+                                  variant='outlined'
+                                />
+                              )}
+                            />
+                          </>
+                        )}
+                      </>
+                    )}
+                  </Grid>
+                  <Grid item xs={12}>
+                    <Box
+                      border={`1px solid ${palette.neutral.medium}`}
+                      borderRadius='5px'
+                      p='1rem'
+                    >
+                      <Dropzone
+                        acceptedFiles='.jpeg,.jpeg,.png'
+                        multiple={true}
+                        onDrop={acceptedFiles => {
+                          setFieldValue('pictures', acceptedFiles);
+                          setSelectedImages(acceptedFiles);
+                        }}
+                      >
+                        {({ getRootProps, getInputProps }) => (
+                          <Box
+                            {...getRootProps()}
+                            border={`2px dashed ${palette.primary.main}`}
+                            p='1rem'
+                            sx={{ '&:hover': { cursor: 'pointer' } }}
+                          >
+                            <input {...getInputProps()} />
+                            {!values.pictures.length ? (
+                              <Typography>Add Pictures Here</Typography>
+                            ) : (
+                              <FlexBetween>
+                                <Typography>
+                                  {values.pictures
+                                    .map(image => image.name)
+                                    .join(', ')}
+                                </Typography>
+                                <EditOutlinedIcon />
+                              </FlexBetween>
+                            )}
+                          </Box>
+                        )}
+                      </Dropzone>
+                    </Box>
+                  </Grid>
+                  <Grid item xs={12}>
+                    <TextField
+                      required
+                      fullWidth
+                      placeholder='Pet Description'
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      value={values.petDescription}
+                      name='petDescription'
+                    />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <TextField
+                      required
+                      fullWidth
+                      placeholder='Tags (coma separated)'
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      value={values.tags}
+                      name='tags'
+                    />
+                  </Grid>
+
+                  {/* Map */}
+                  <Grid item xs={12}>
+                    <MapComponent
+                      userLocation={userLocation}
+                      selectedLocation={selectedLocation}
+                      onSelectLocation={handleLocationSelect}
+                    />
+                  </Grid>
+                </Grid>
+
+                {/* BUTTONS */}
+                <Box mt={2}>
+                  <Button
+                    fullWidth
+                    type='submit'
+                    sx={{
+                      backgroundColor: '#6BBB52', //palette.primary.main,
+                      color: 'white', //palette.background.alt,
+                      '&:hover': '#6BBB5233', //{ color: palette.primary.main }
+                      borderRadius: '60px'
                     }}
                   >
-                    {({ getRootProps, getInputProps }) => (
-                      <Box
-                        {...getRootProps()}
-                        border={`2px dashed ${palette.primary.main}`}
-                        p='1rem'
-                        sx={{ '&:hover': { cursor: 'pointer' } }}
-                      >
-                        <input {...getInputProps()} />
-                        {!values.picture ? (
-                          <Typography>Add Pictures Here</Typography>
-                        ) : (
-                          <FlexBetween>
-                            <Typography>{values.picture.name}</Typography>
-                            <EditOutlinedIcon />
-                          </FlexBetween>
-                        )}
-                      </Box>
-                    )}
-                  </Dropzone>
+                    Create
+                  </Button>
                 </Box>
-
-                <TextField
-                  required
-                  placeholder='Pet Description'
-                  onBlur={handleBlur}
-                  onChange={handleChange}
-                  value={values.petDescription}
-                  name='petDescription'
-                  sx={{ gridColumn: 'span 4' }}
-                />
-                <TextField
-                  required
-                  placeholder='Primary Bread'
-                  onBlur={handleBlur}
-                  onChange={handleChange}
-                  value={values.primaryBreed}
-                  name='primaryBreed'
-                  sx={{ gridColumn: 'span 4' }}
-                />
-                <TextField
-                  placeholder='Secondary Bread'
-                  onBlur={handleBlur}
-                  onChange={handleChange}
-                  value={values.secondaryBreed}
-                  name='secondaryBreed'
-                  sx={{ gridColumn: 'span 4' }}
-                />
-                <TextField
-                  placeholder='Tags (coma separated)'
-                  onBlur={handleBlur}
-                  onChange={handleChange}
-                  value={values.tags}
-                  name='tags'
-                  sx={{ gridColumn: 'span 4' }}
-                />
-              </Box>
-
-              {/* BUTTONS */}
-              <Box>
-                <Button
-                  fullWidth
-                  type='submit'
-                  sx={{
-                    m: '2rem 0',
-                    p: '1rem',
-                    backgroundColor: '#6BBB52', //palette.primary.main,
-                    color: 'white', //palette.background.alt,
-                    '&:hover': '#6BBB5233', //{ color: palette.primary.main }
-                    borderRadius: '60px'
-                  }}
-                >
-                  Create
-                </Button>
-              </Box>
-            </form>
-          </Box>
-        )}
+              </form>
+            </Box>
+          );
+        }}
       </Formik>
     </>
   );

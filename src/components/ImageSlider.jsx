@@ -1,11 +1,8 @@
-import React from 'react';
+import { useState } from 'react';
 import { Box, IconButton, useBreakpointValue } from '@chakra-ui/react';
-// Here we have used react-icons package for the icons
 import { BiLeftArrowAlt, BiRightArrowAlt } from 'react-icons/bi';
-// And react-slick as our Carousel Lib
 import Slider from 'react-slick';
 
-// Settings for the slider
 const settings = {
   dots: true,
   arrows: false,
@@ -18,22 +15,18 @@ const settings = {
   slidesToScroll: 1
 };
 
-export default function Carousel({ cards }) {
-  // As we have used custom buttons, we need a reference variable to
-  // change the state
-  const [slider, setSlider] = (React.useState < Slider) | (null > null);
+import { useTheme } from '@mui/material';
 
-  // These are the breakpoints which changes the position of the
-  // buttons as the screen size changes
+export default function Carousel({ cards, previewOpacity = 0.5 }) {
+  const [slider, setSlider] = useState(null);
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const { palette } = useTheme();
   const top = useBreakpointValue({ base: '90%', md: '50%' });
   const side = useBreakpointValue({ base: '30%', md: '10px' });
-
-  // These are the images used in the slide
-  /* const cards = [
-    'https://images.unsplash.com/photo-1612852098516-55d01c75769a?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1yZWxhdGVkfDR8fHxlbnwwfHx8fA%3D%3D&auto=format&fit=crop&w=900&q=60',
-    'https://images.unsplash.com/photo-1627875764093-315831ac12f7?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1yZWxhdGVkfDJ8fHxlbnwwfHx8fA%3D%3D&auto=format&fit=crop&w=900&q=60',
-    'https://images.unsplash.com/photo-1571432248690-7fd6980a1ae2?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1yZWxhdGVkfDl8fHxlbnwwfHx8fA%3D%3D&auto=format&fit=crop&w=900&q=60'
-  ]; */
+  const mediumMain = palette.neutral.mediumMain;
+  const handleBeforeChange = (current, next) => {
+    setCurrentSlide(next);
+  };
 
   return (
     <Box
@@ -41,8 +34,9 @@ export default function Carousel({ cards }) {
       height={'600px'}
       width={'full'}
       overflow={'hidden'}
+      backgroundColor='#539ce9' //#00D5FA
+      margin={0}
     >
-      {/* CSS files for react-slick */}
       <link
         rel='stylesheet'
         type='text/css'
@@ -54,7 +48,6 @@ export default function Carousel({ cards }) {
         type='text/css'
         href='https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick-theme.min.css'
       />
-      {/* Left Icon */}
       <IconButton
         aria-label='left-arrow'
         colorScheme='messenger'
@@ -68,7 +61,6 @@ export default function Carousel({ cards }) {
       >
         <BiLeftArrowAlt />
       </IconButton>
-      {/* Right Icon */}
       <IconButton
         aria-label='right-arrow'
         colorScheme='messenger'
@@ -82,20 +74,46 @@ export default function Carousel({ cards }) {
       >
         <BiRightArrowAlt />
       </IconButton>
-      {/* Slider */}
-      <Slider {...settings} ref={slider => setSlider(slider)}>
+      <Slider {...settings} ref={setSlider} beforeChange={handleBeforeChange}>
         {cards.map((url, index) => (
           <Box
             key={index}
-            height={'6xl'}
+            height={'600px'}
+            width={'100%'}
             position='relative'
             backgroundPosition='center'
             backgroundRepeat='no-repeat'
-            backgroundSize='cover'
+            backgroundSize='contain'
             backgroundImage={`url(${url})`}
           />
         ))}
       </Slider>
+      {cards.length > 1 && (
+        <>
+          <Box
+            position='absolute'
+            height={'600px'}
+            width={'50%'}
+            left={0}
+            opacity={currentSlide === 0 ? 0 : previewOpacity}
+            backgroundImage={`url(${cards[currentSlide - 1]})`}
+            backgroundSize='contain'
+            backgroundPosition='center'
+            backgroundRepeat='no-repeat'
+          />
+          <Box
+            position='absolute'
+            height={'600px'}
+            width={'50%'}
+            right={0}
+            opacity={currentSlide === cards.length - 1 ? 0 : previewOpacity}
+            backgroundImage={`url(${cards[currentSlide + 1]})`}
+            backgroundSize='contain'
+            backgroundPosition='center'
+            backgroundRepeat='no-repeat'
+          />
+        </>
+      )}
     </Box>
   );
 }

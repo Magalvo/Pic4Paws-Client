@@ -1,44 +1,305 @@
-import UserWidget from '../../pages/widgets/UserWidget';
-import NavBar from '../navBar/index';
-import { Box, useMediaQuery } from '@mui/material';
-import MyPostWidget from '../../pages/widgets/MyPostWidget';
-import AdvertWidget from '../../pages/widgets/AdvertWidget';
-import FriendListWidget from '../../pages/widgets/FriendListWidget';
-import PostsWidget from '../../pages/widgets/PostsWidget';
-import { useSelector } from 'react-redux';
-import { findEmail } from '../../api/users.api';
+import {
+  Box,
+  Container,
+  Stack,
+  Text,
+  Flex,
+  VStack,
+  Button,
+  Heading,
+  SimpleGrid,
+  StackDivider,
+  useColorModeValue,
+  List,
+  ListItem,
+  Divider
+} from '@chakra-ui/react';
 
-const TestingPage = () => {
-  const isNonMobileScreens = useMediaQuery('(min-width:1000px)');
-  const userId = localStorage.getItem('userId');
+import { useMediaQuery } from '@chakra-ui/react';
+
+import { css } from '@emotion/react';
+
+import { useTheme } from '@mui/material';
+
+import axios from 'axios';
+import { useParams, useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import Loading from '../../../components/Loading';
+import Navbar from '../../navBar/index';
+import Carrousel from '../../../components/ImageSlider';
+import MapComponent from '../../../components/GoogleMaps';
+import { getPet } from '../../../api/pets.api';
+import LocationMap from '../../../components/LocationMap';
+import Friend from '../../../components/Friend';
+import { getId } from '../../../api/users.api';
+
+export default function PetDetailsV2() {
+  const [pet, setPet] = useState(null);
+  const [image, setImage] = useState([]);
+  const [age, setAge] = useState('');
+  const [gender, setGender] = useState('');
+  const [tags, setTags] = useState([]);
+  const [name, setName] = useState('');
+  const [description, setDescription] = useState('');
+  const [largeImageUrls, setLargeImageUrls] = useState([]);
+  const [location, setLocation] = useState([]);
+  const [petType, setPetType] = useState('');
+  const [creator, setCreator] = useState(null);
+  const { id } = useParams();
+  const [creatorId, setCreatorId] = useState('');
+  const navigate = useNavigate();
+  const bearerToken = localStorage.getItem('bearerToken');
+  const parser = new DOMParser();
+  const theme = useTheme();
+
+  const [isSmallScreen] = useMediaQuery(`(max-width: 1100px)`);
+
+  const fetchPet = async () => {
+    try {
+      const response = await getPet(id);
+      console.log('This is the Pet response', response);
+      setImage(response.data.photos);
+      setPet(response.data);
+      setPetType(response.data.petType);
+      setAge(response.data.age);
+      setTags(response.data.tags);
+      setGender(response.data.gender);
+      setName(response.data.petName);
+      setCreatorId(response.data.userId);
+
+      const decodedText = parser.parseFromString(
+        `<!doctype html><body>${response.data.petDescription}`,
+        'text/html'
+      ).body.textContent;
+
+      setDescription(decodedText);
+      setLocation(response.data.location);
+    } catch (e) {
+      console.log('Error Fetching Project', e);
+    }
+  };
+
+  const fetchUser = async () => {
+    try {
+      const response = await getId(creatorId);
+      const userData = response.data; // User data from the API
+      setCreator(userData);
+    } catch (error) {
+      console.error('Error fetching user:', error);
+    }
+  };
+
+  useEffect(() => {
+    if (image && image.length > 0) {
+      /*  const largeUrlsArray = image.map(photo => photo.large);
+      console.log(largeUrlsArray); */
+      setLargeImageUrls(image); // Update the state with filtered URLs
+    }
+  }, [image]);
+
+  useEffect(() => {
+    fetchPet();
+    fetchUser();
+  }, [id]);
+
+  //maxW={'7xl'} => Container
+
+  const containerStyles = {
+    width: '500px',
+    height: '280px',
+    margin: '0 auto'
+  };
+
+  let colorGender = '';
+  if (gender === 'Male') {
+    colorGender = '#539CE9';
+  } else if (gender === 'Female') {
+    colorGender = '#cc44ea';
+  } else {
+    colorGender = 'Black';
+  }
 
   return (
-    <Box>
-      <NavBar userId={userId} />
-      <Box
-        width='100%'
-        padding='2rem 6%'
-        display={isNonMobileScreens ? 'flex' : 'block'}
-        gap='0.5rem'
-        justifyContent='space-between'
-      >
-        <Box
-          justifyContent='center'
-          flexBasis={isNonMobileScreens ? '90%' : undefined}
-          mt={isNonMobileScreens ? undefined : '2rem'}
-        >
-        
-        </Box>
-        {isNonMobileScreens && (
-          <Box flexBasis='26%'>
-            <AdvertWidget />
-            <Box m='2rem 0' />
-            <FriendListWidget userId={userId} />
-          </Box>
-        )}
-      </Box>
-    </Box>
-  );
-};
+    <>
+      <Navbar />
+      <Container>
+        {pet ? (
+          <SimpleGrid
+            columns={{ base: 1, lg: 1 }}
+            spacing={{ base: 8, md: 10 }}
+            py={{ base: 0, md: 0 }}
+          >
+            <Flex>
+              <Carrousel cards={largeImageUrls} />
+            </Flex>
+            <Flex
+              direction={isSmallScreen ? 'column' : 'row'}
+              justifyContent={isSmallScreen ? 'center' : 'space-between'}
+              alignItems={isSmallScreen ? 'center' : 'flex-start'}
+            >
+              <Box
+                mx='3rem'
+                bg='white'
+                p={{ base: 8, md: 16 }}
+                rounded='md'
+                textAlign='left'
+                //mx='auto'
+                my={10}
+                maxW={{ base: '100%', md: '700px' }}
+                width={{ base: '100%', md: 'calc(100% - 2rem)' }}
+              >
+                <Stack spacing={{ base: 6, md: 10 }}>
+                  <Box as={'header'}>
+                    <Heading
+                      lineHeight={1.1}
+                      fontWeight={600}
+                      fontSize={{ base: '2xl', sm: '4xl', lg: '5xl' }}
+                    >
+                      {name}
+                    </Heading>
+                    <Text
+                      fontWeight={600}
+                      fontSize={'2xl'}
+                      stye={{ color: 'pink' }}
+                    >
+                      {gender} {' ● '}
+                      {age}
+                    </Text>
+                  </Box>
 
-export default TestingPage;
+                  <Stack
+                    spacing={{ base: 4, sm: 6 }}
+                    direction={'column'}
+                    divider={
+                      <StackDivider
+                        borderColor={useColorModeValue('gray.200', 'gray.600')}
+                      />
+                    }
+                  >
+                    <VStack spacing={{ base: 4, sm: 6 }}>
+                      <Text
+                        color={useColorModeValue('gray.500', 'gray.400')}
+                        fontSize={'2xl'}
+                        fontWeight={'300'}
+                      >
+                        {tags && tags.map(tag => `#${tag.trim()} `)}
+                      </Text>
+                      <Text fontSize={'lg'}>{description}</Text>
+                    </VStack>
+
+                    <Box>
+                      <Text
+                        fontSize={{ base: '16px', lg: '18px' }}
+                        color='#455eb5'
+                        fontWeight={'500'}
+                        textTransform={'uppercase'}
+                        mb={'4'}
+                      >
+                        Breeds
+                      </Text>
+
+                      <List spacing={2}>
+                        <ListItem>
+                          <Text as={'span'} fontWeight={'bold'}>
+                            Primary Breed:
+                          </Text>{' '}
+                          {pet.breeds.primary}
+                        </ListItem>
+                        <ListItem>
+                          <Text as={'span'} fontWeight={'bold'}>
+                            Secondary Breed:
+                          </Text>{' '}
+                          {pet.breeds.secondary ? pet.breeds.secondary : 'none'}
+                        </ListItem>
+                        <ListItem>
+                          <Text as={'span'} fontWeight={'bold'}>
+                            Mixed:
+                          </Text>{' '}
+                          {pet.breeds.primary && pet.breeds.secondary
+                            ? 'Mixed Breed'
+                            : 'Pure Breed'}
+                        </ListItem>
+                        <ListItem>
+                          <Text as={'span'} fontWeight={'bold'}>
+                            Unknown Breed:
+                          </Text>{' '}
+                          {!pet.breeds.primary && !pet.breeds.secondary
+                            ? 'Unknown Breed'
+                            : 'No'}
+                        </ListItem>
+                      </List>
+                    </Box>
+                  </Stack>
+
+                  <Button
+                    rounded={'none'}
+                    w={'full'}
+                    mt={8}
+                    size={'lg'}
+                    py={'7'}
+                    bg={useColorModeValue('gray.900', 'gray.50')}
+                    color={useColorModeValue('white', 'gray.900')}
+                    textTransform={'uppercase'}
+                    _hover={{
+                      transform: 'translateY(2px)',
+                      boxShadow: 'lg'
+                    }}
+                  >
+                    Contact Owner
+                  </Button>
+                </Stack>
+              </Box>
+              <Box
+                bg='white'
+                p={{ base: 8, md: 16 }}
+                rounded='md'
+                textAlign='left'
+                mx='1rem'
+                my={isSmallScreen ? 4 : 10}
+                width={{ base: '100%', md: 'calc(50% - 1rem)' }}
+              >
+                <Box
+                  style={{
+                    borderRadius: '1rem'
+                  }}
+                >
+                  {creator && (
+                    <Friend
+                      friendId={creatorId}
+                      name={`${creator.firstName} `}
+                      subtitle={creator.occupation}
+                    />
+                  )}
+                </Box>
+                <Box m='1rem'>
+                  <hr />
+                </Box>
+
+                <Box mt='2rem'>
+                  <LocationMap lng={location.lng} lat={location.lat} />
+                </Box>
+                <Divider my='8' />
+              </Box>
+            </Flex>
+
+            {/* <LocationMap lng={location.lng} lat={location.lat} /> */}
+            <Box sx={{ backgroundColor: '#638bf1' }}>
+              <Text
+                textAlign='center'
+                fontWeight='600'
+                color='white'
+                fontSize='2rem'
+                mt='1rem'
+              >
+                Other 4 Paws
+              </Text>
+              {/* <HorizontalScrollbar petType={petType} /> */}
+            </Box>
+          </SimpleGrid>
+        ) : (
+          <Loading />
+        )}
+      </Container>
+    </>
+  );
+}

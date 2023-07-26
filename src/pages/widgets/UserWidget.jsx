@@ -50,6 +50,7 @@ const UserWidget = () => {
         gap='0.5rem'
         pb='1.1rem'
         onClick={() => navigate(`/profile/${userId}`)}
+        color={dark}
       >
         <FlexBetween gap='1rem'>
           <UserImage userId={userId} />

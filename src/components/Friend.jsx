@@ -16,7 +16,9 @@ const Friend = ({ friendId, name, subtitle }) => {
   const { palette } = useTheme();
   const primaryLight = palette.primary.light;
   const primaryDark = palette.primary.dark;
-  const friends = useSelector(state => state.user.friends);
+  const friends = useSelector(state =>
+    state.user?.friends ? state.user.friends : ''
+  );
   const main = palette.neutral.main;
   const medium = palette.neutral.medium;
 
@@ -46,7 +48,6 @@ const Friend = ({ friendId, name, subtitle }) => {
         <Box
           onClick={() => {
             navigate(`/profile/${friendId}`);
-            navigate(0);
           }}
         >
           <UserImage userId={friendId} />
@@ -72,30 +73,36 @@ const Friend = ({ friendId, name, subtitle }) => {
   }
 
   return (
-    <Box>
+    <Box sx={{ display: 'flex', alignItems: 'center' }}>
       <Box
         onClick={() => {
           navigate(`/profile/${friendId}`);
-          navigate(0);
+        }}
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: '0.5rem',
+          cursor: 'pointer'
         }}
       >
         <UserImage userId={friendId} />
-        <Typography
-          color={palette.neutral.main}
-          variant='h5'
-          fontWeight='500'
-          sx={{
-            '&:hover': {
-              color: palette.primary.light,
-              cursor: 'pointer'
-            }
-          }}
-        >
-          {name}
-        </Typography>
-        <Typography color={palette.neutral.medium} fontSize='0.75rem'>
-          {subtitle}
-        </Typography>
+        <Box>
+          <Typography
+            color={palette.neutral.main}
+            variant='h5'
+            fontWeight='500'
+            sx={{
+              '&:hover': {
+                color: palette.primary.light
+              }
+            }}
+          >
+            {name}
+          </Typography>
+          <Typography color={palette.neutral.medium} fontSize='0.75rem'>
+            {subtitle}
+          </Typography>
+        </Box>
       </Box>
       <IconButton
         onClick={handlePatchFriend}

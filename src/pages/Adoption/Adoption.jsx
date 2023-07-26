@@ -7,6 +7,9 @@ import './Styles.css';
 
 import Navbar from '../navBar/index';
 
+import CreatePaws from '../../components/FormModal';
+import FormAccordion from '../../components/Accordion';
+
 const Adoption = () => {
   const [currentId, setCurrentId] = useState(0);
 
@@ -30,7 +33,11 @@ const Adoption = () => {
               <PetsWidget />
             </Grid>
             <Grid item xs={12} sm={4}>
-              <PetForm currentId={currentId} setCurrentId={setCurrentId} />
+              {/* <PetForm /> */}
+              {/* <NewPetForm /> */}
+              {/* <PetForm currentId={currentId} setCurrentId={setCurrentId} /> */}
+              {/* <CreatePaws /> */}
+              <FormAccordion />
             </Grid>
           </Grid>
         </Container>

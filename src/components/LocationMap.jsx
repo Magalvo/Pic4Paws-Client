@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
-import Ping from '../assets/images/Ping.png';
+import Ping from '../assets/images/locaPiz.png';
 
 const LocationMap = ({ lat, lng }) => {
   const [mapLoaded, setMapLoaded] = useState(false);
@@ -13,7 +13,7 @@ const LocationMap = ({ lat, lng }) => {
   };
 
   console.log(lat, lng);
-  // Set the center once valid lat and lng are available
+
   useEffect(() => {
     if (lat && lng) {
       setCenter({ lat: lat, lng: lng });
@@ -22,13 +22,12 @@ const LocationMap = ({ lat, lng }) => {
     }
   }, [lat, lng]);
 
-  // Check if the map is loaded and location is available before rendering the map and marker
   if (!mapLoaded || !center) {
     return null;
   }
 
   const customMarkerIcon = {
-    url: Ping,
+    url: '../assets/images/locaPiz.png',
     scaledSize: 10
   };
   console.log(customMarkerIcon);

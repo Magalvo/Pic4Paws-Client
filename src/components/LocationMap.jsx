@@ -27,8 +27,10 @@ const LocationMap = ({ lat, lng }) => {
   }
 
   const customMarkerIcon = {
-    url: '../assets/images/locaPiz.png',
-    scaledSize: 10
+    url: Ping,
+    scaledSize: window.google?.maps?.Size
+      ? new window.google.maps.Size(40, 40)
+      : undefined
   };
   console.log(customMarkerIcon);
 

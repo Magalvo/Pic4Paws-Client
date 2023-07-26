@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
-import Ping from '../assets/images/'
+import Ping from '../assets/images/Ping.png';
 
 const LocationMap = ({ lat, lng }) => {
   const [mapLoaded, setMapLoaded] = useState(false);
@@ -28,7 +28,7 @@ const LocationMap = ({ lat, lng }) => {
   }
 
   const customMarkerIcon = {
-    url: 
+    url: Ping,
     scaledSize: new window.google.maps.Size(40, 40) // Adjust the size of the custom marker
   };
 

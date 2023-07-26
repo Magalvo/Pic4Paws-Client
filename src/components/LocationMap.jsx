@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
+import Ping from '../assets/images/'
 
 const LocationMap = ({ lat, lng }) => {
   const [mapLoaded, setMapLoaded] = useState(false);
@@ -26,15 +27,9 @@ const LocationMap = ({ lat, lng }) => {
     return null;
   }
 
-  const markerOptions = {
-    position: center,
-    icon: {
-      path: 'M7 14l5-5 5 5z',
-      fillColor: '#00FF00', // Change this to modify the marker color (green in this example)
-      fillOpacity: 1,
-      strokeWeight: 0,
-      scale: 1.5
-    }
+  const customMarkerIcon = {
+    url: 
+    scaledSize: new window.google.maps.Size(40, 40) // Adjust the size of the custom marker
   };
 
   return (
@@ -48,7 +43,7 @@ const LocationMap = ({ lat, lng }) => {
           center={center}
           zoom={14}
         >
-          <Marker {...markerOptions} />
+          <Marker position={marker} icon={customMarkerIcon} />
         </GoogleMap>
       </div>
     </LoadScript>

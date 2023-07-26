@@ -137,7 +137,7 @@ const PetsWidget = () => {
           </Grid>
         ))}
       </Grid>
-      {/* <Grid
+      <Grid
         sx={{ display: 'flex', alignItem: 'center' }}
         container
         alignItems='stretch'
@@ -149,7 +149,7 @@ const PetsWidget = () => {
               <PetApiWidget pet={pet} />
             </Grid>
           ))}
-      </Grid> */}
+      </Grid>
     </div>
   );
 };

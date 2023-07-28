@@ -37,7 +37,3 @@ export const getApiPet = async (animalId, bearerToken) => {
     }
   );
 };
-
-export const getPets = async () => {
-  return axios.get(`${baseURL}/`);
-};

@@ -19,6 +19,9 @@ import NoPage from './pages/404';
 import Messenger from './pages/Messenger/Messenger';
 import PetDetailsApi from './pages/PetDetails/petDetailsApi/PetDetailsApi';
 import PetDetailsV2 from './pages/PetDetails/myPetDetails/PetDetailsV2';
+import CatBreedDetailsPage from './pages/CatBreeds/CatBreedDetailsPage';
+import DogBreedDetailsPage from './pages/DogBreeds/DogBreedDetailsPage';
+import TestMap from './components/TestMap';
 
 function App() {
   const mode = useSelector(state => state.mode);
@@ -32,6 +35,8 @@ function App() {
           <CssBaseline />
           <Routes>
             <Route path='/' element={<Hero />} />
+
+            <Route path='/test' element={<TestMap />} />
 
             <Route
               path='/auth'
@@ -51,8 +56,16 @@ function App() {
               }
             />
 
-            <Route path='/pets' element={<Adoption />} />
+            <Route
+              path='/breeds/cat-breeds/:breedName'
+              element={<CatBreedDetailsPage />}
+            />
+            <Route
+              path='/breeds/dog-breeds/:breedName'
+              element={<DogBreedDetailsPage />}
+            />
 
+            <Route path='/pets' element={<Adoption />} />
             <Route path='/pets/:id' element={<PetDetailsV2 />} />
             {/*  <Route path='/petsAPI/:id' element */}
             <Route path='/animals/:id' element={<PetDetailsApi />} />

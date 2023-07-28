@@ -17,7 +17,7 @@ export default function FormAccordion({ refreshList }) {
           <Typography align='center'>Create a New 4 Paws</Typography>
         </AccordionSummary>
         <AccordionDetails>
-          <PetForm refreshList={refreshList} />
+          <PetForm />
         </AccordionDetails>
       </Accordion>
     </div>

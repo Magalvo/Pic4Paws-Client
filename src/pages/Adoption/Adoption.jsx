@@ -7,7 +7,6 @@ import './Styles.css';
 
 import Navbar from '../navBar/index';
 
-import CreatePaws from '../../components/FormModal';
 import FormAccordion from '../../components/Accordion';
 
 const Adoption = () => {

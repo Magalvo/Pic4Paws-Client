@@ -12,7 +12,8 @@ import {
   useColorModeValue,
   List,
   ListItem,
-  Divider
+  Divider,
+  Link
 } from '@chakra-ui/react';
 
 import { useMediaQuery } from '@chakra-ui/react';
@@ -24,7 +25,7 @@ import { useTheme } from '@mui/material';
 import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import Loading from '../../../components/Loading';
+import Loading from '../../../components/Loading2';
 import Navbar from '../../navBar/index';
 import Carrousel from '../../../components/ImageSlider';
 import MapComponent from '../../../components/GoogleMaps';
@@ -32,6 +33,11 @@ import { getPet } from '../../../api/pets.api';
 import LocationMap from '../../../components/LocationMap';
 import Friend from '../../../components/Friend';
 import { getId } from '../../../api/users.api';
+import { Padding } from '@mui/icons-material';
+import DogAdoptionModal from '../../../components/DogAdoptModal';
+import DogSupportModal from '../../../components/dogSupportModal';
+import CatAdoptionModal from '../../../components/CatAdoptModal';
+import CatSupportModal from '../../../components/catSupportModal';
 
 export default function PetDetailsV2() {
   const [pet, setPet] = useState(null);
@@ -164,6 +170,32 @@ export default function PetDetailsV2() {
                     >
                       {gender} {' ● '}
                       {age}
+                      {' ● '}
+                      {petType === 'dog' ? (
+                        <Text
+                          cursor='pointer'
+                          color='teal.500'
+                          onClick={() =>
+                            navigate(
+                              `/breeds/dog-breeds/${pet.breedsId.primaryId}`
+                            )
+                          }
+                        >
+                          {pet.breeds.primary}
+                        </Text>
+                      ) : (
+                        <Text
+                          cursor='pointer'
+                          color='teal.500'
+                          onClick={() =>
+                            navigate(
+                              `/breeds/cat-breeds/${pet.breedsId.primaryId}`
+                            )
+                          }
+                        >
+                          {pet.breeds.primary}
+                        </Text>
+                      )}
                     </Text>
                   </Box>
 
@@ -176,16 +208,17 @@ export default function PetDetailsV2() {
                       />
                     }
                   >
-                    <VStack spacing={{ base: 4, sm: 6 }}>
+                    <Box spacing={{ base: 4, sm: 6 }}>
                       <Text
                         color={useColorModeValue('gray.500', 'gray.400')}
                         fontSize={'2xl'}
                         fontWeight={'300'}
+                        textAlign='left'
                       >
                         {tags && tags.map(tag => `#${tag.trim()} `)}
                       </Text>
                       <Text fontSize={'lg'}>{description}</Text>
-                    </VStack>
+                    </Box>
 
                     <Box>
                       <Text
@@ -231,24 +264,22 @@ export default function PetDetailsV2() {
                     </Box>
                   </Stack>
 
-                  <Button
-                    rounded={'none'}
-                    w={'full'}
-                    mt={8}
-                    size={'lg'}
-                    py={'7'}
-                    bg={useColorModeValue('gray.900', 'gray.50')}
-                    color={useColorModeValue('white', 'gray.900')}
-                    textTransform={'uppercase'}
-                    _hover={{
-                      transform: 'translateY(2px)',
-                      boxShadow: 'lg'
-                    }}
-                  >
-                    Contact Owner
-                  </Button>
+                  <Flex justifyContent='space-between'>
+                    {petType === 'dog' ? (
+                      <>
+                        <DogAdoptionModal pet={pet} />
+                        <DogSupportModal />
+                      </>
+                    ) : (
+                      <>
+                        <CatAdoptionModal pet={name} />
+                        <CatSupportModal />
+                      </>
+                    )}
+                  </Flex>
                 </Stack>
               </Box>
+
               <Box
                 bg='white'
                 p={{ base: 8, md: 16 }}
@@ -258,9 +289,21 @@ export default function PetDetailsV2() {
                 my={isSmallScreen ? 4 : 10}
                 width={{ base: '100%', md: 'calc(50% - 1rem)' }}
               >
+                <Box as={'header'}>
+                  <Heading
+                    lineHeight={1.1}
+                    fontWeight={600}
+                    fontSize={{ base: '2xl', sm: '4xl', lg: '5xl' }}
+                    alignItems='center'
+                    divider={<Divider />}
+                  >
+                    More Info
+                  </Heading>
+                </Box>
                 <Box
                   style={{
-                    borderRadius: '1rem'
+                    borderRadius: '1rem',
+                    padding: '1rem'
                   }}
                 >
                   {creator && (
@@ -279,6 +322,23 @@ export default function PetDetailsV2() {
                   <LocationMap lng={location.lng} lat={location.lat} />
                 </Box>
                 <Divider my='8' />
+                <Button
+                  rounded={'full'}
+                  w={'100%'} // Adjust the width to control button size and spacing
+                  mt={8}
+                  size={'lg'}
+                  fontWeight='semibold'
+                  py={'7'}
+                  bg='#638bf1'
+                  color={useColorModeValue('white', 'gray.900')}
+                  textTransform={'uppercase'}
+                  _hover={{
+                    transform: 'translateY(2px)',
+                    boxShadow: 'lg'
+                  }}
+                >
+                  Contact
+                </Button>
               </Box>
             </Flex>
 

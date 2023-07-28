@@ -18,7 +18,7 @@ function Copyright() {
   return (
     <Typography variant='body2' color='text.secondary' align='center'>
       {'Copyright © '}
-      <Link color='inherit' href='https://mui.com/'>
+      <Link color='inherit' href='https://pic4paws.com'>
         Pic4Paws
       </Link>{' '}
       {new Date().getFullYear()}
@@ -30,6 +30,7 @@ function Copyright() {
 const LoginPage = () => {
   const isNonMobileScreens = useMediaQuery('(min-width: 1000px)');
   const navigate = useNavigate();
+  const theme = useTheme();
   return (
     <ThemeProvider theme={useTheme()}>
       <Grid container component='main' sx={{ height: '100vh' }}>
@@ -63,10 +64,11 @@ const LoginPage = () => {
           >
             <Box
               width='100%'
-              textAlign='center'
+              display='flex'
+              justifyContent='center' // Center the content horizontally
+              alignItems='center'
               backgroundColor='white'
               borderRadius='60px'
-              m='1rem auto'
               onClick={() => navigate('/')}
             >
               <img src={Logo} alt='pic4paws' width='200' />

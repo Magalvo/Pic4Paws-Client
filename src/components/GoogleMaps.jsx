@@ -1,12 +1,16 @@
-import { useRef, useState } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import {
   GoogleMap,
   LoadScript,
   StandaloneSearchBox,
-  Marker
+  Marker,
+  Autocomplete,
+  useJsApiLoader
 } from '@react-google-maps/api';
 
 import { Input } from '@chakra-ui/react';
+
+const libraries = ['places'];
 
 const MapComponent = ({ userLocation, onSelectLocation }) => {
   const [selectedLocation, setSelectedLocation] = useState(null);
@@ -24,17 +28,18 @@ const MapComponent = ({ userLocation, onSelectLocation }) => {
       const longitude = places[0].geometry.location.lng();
       setSelectedLocation({ lat: latitude, lng: longitude });
     }
+  };
+
+  useEffect(() => {
     if (onSelectLocation) {
       onSelectLocation(selectedLocation);
       console.log(selectedLocation);
     }
-  };
-
-  const libraries = ['places'];
+  }, [selectedLocation, onSelectLocation]);
 
   return (
     <LoadScript
-      googleMapsApiKey={`${import.meta.env.VITE_GOOGLE_API}&callback=initMap`}
+      googleMapsApiKey={`${import.meta.env.VITE_GOOGLE_API}&callback=initMap`} //&callback=initMap
       libraries={libraries}
     >
       <div>

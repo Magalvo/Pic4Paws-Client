@@ -45,7 +45,11 @@ const LocationMap = ({ lat, lng }) => {
           center={center}
           zoom={14}
         >
-          <Marker position={marker} icon={customMarkerIcon} />
+          <Marker
+            position={marker}
+            icon={customMarkerIcon}
+            title='Pet Location'
+          />
         </GoogleMap>
       </div>
     </LoadScript>

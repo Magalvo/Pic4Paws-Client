@@ -9,6 +9,7 @@ import { userConversations } from '../../api/conversations.api';
 import { sendMessage, userMessages } from '../../api/messages.api';
 import { io } from 'socket.io-client';
 import { getId } from '../../api/users.api';
+import ChatImg from '../../assets/images/PawchaChat.png';
 
 const Messenger = () => {
   const userId = localStorage.getItem('userId');
@@ -168,13 +169,37 @@ const Messenger = () => {
                 </Box>
               </>
             ) : (
-              <Typography className='noConversationText'>
-                Open a Conversation to start Chatting{' '}
-              </Typography>
+              <>
+                <img src={ChatImg} />
+                <Typography
+                  fontSize={30}
+                  color='#455eb5'
+                  className='noConversationText'
+                  fontWeight={200}
+                >
+                  <h1>
+                    Welcome to{' '}
+                    <span
+                      style={{
+                        color: '#6bbb52',
+                        fontWeight: 'bold'
+                      }}
+                    >
+                      PawChat
+                    </span>
+                    !{' '}
+                  </h1>
+
+                  <p>Select a Pawsome friend and start chatting</p>
+                </Typography>
+              </>
             )}
           </Box>
         </Box>
         <Box className='chatOnline'>
+          <Typography variant='h2' textAlign='center'>
+            Online
+          </Typography>
           <ChatOnline
             onlineUsers={onlineUsers}
             currentId={userId}

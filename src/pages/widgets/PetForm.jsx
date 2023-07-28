@@ -22,8 +22,9 @@ import FlexBetween from '../../components/flexBetween';
 
 import { createPet, upload } from '../../api/pets.api';
 import MapComponent from '../../components/GoogleMaps';
+import TestMap from '../../components/TestMap';
 
-const PetForm = ({ refreshList }) => {
+const PetForm = () => {
   //const [photos, setPhotos] = useState([]);
   const [selectedImages, setSelectedImages] = useState([]);
   const [breedSelectionVisible, setBreedSelectionVisible] = useState(false);
@@ -121,7 +122,6 @@ const PetForm = ({ refreshList }) => {
       const create = responseCreate.data;
       onSubmitProps.resetForm();
       console.log(create);
-      refreshList();
     } catch (error) {
       console.log('Error Updating the Project', error);
     }
@@ -418,6 +418,8 @@ const PetForm = ({ refreshList }) => {
                       selectedLocation={selectedLocation}
                       onSelectLocation={handleLocationSelect}
                     />
+
+                    {/* <TestMap /> */}
                   </Grid>
                 </Grid>
 

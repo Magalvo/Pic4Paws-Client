@@ -2,10 +2,13 @@ import { useState, useEffect } from 'react';
 import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
 import Ping from '../assets/images/Pinga.png';
 
+import { Button } from '@mui/material';
+
 const LocationMap = ({ lat, lng }) => {
   const [mapLoaded, setMapLoaded] = useState(false);
   const [center, setCenter] = useState(null);
   const [marker, setMarker] = useState(null);
+  const [gettingDirections, setGettingDirections] = useState(false);
 
   const mapContainerStyle = {
     height: '400px',
@@ -34,6 +37,30 @@ const LocationMap = ({ lat, lng }) => {
   };
   console.log(customMarkerIcon);
 
+  const handleGetDirections = () => {
+    if (gettingDirections) return; // Prevent multiple clicks while getting directions
+
+    setGettingDirections(true);
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        position => {
+          const userLat = position.coords.latitude;
+          const userLng = position.coords.longitude;
+          const directionsUrl = `https://www.google.com/maps/dir/?api=1&origin=${userLat},${userLng}&destination=${lat},${lng}`;
+          window.open(directionsUrl, '_blank');
+
+          setGettingDirections(false);
+        },
+        error => {
+          console.error('Error getting user location:', error);
+          setGettingDirections(false);
+        }
+      );
+    } else {
+      console.error('Geolocation is not supported by this browser.');
+    }
+  };
+
   return (
     <LoadScript
       googleMapsApiKey={`${import.meta.env.VITE_GOOGLE_API}&callback=initMap`}
@@ -52,6 +79,28 @@ const LocationMap = ({ lat, lng }) => {
           />
         </GoogleMap>
       </div>
+      {/* Add the button */}
+      <Button
+        fullWidth
+        variant='contained'
+        size='large'
+        fontWeight='bold'
+        sx={{
+          mt: 8,
+          py: '7',
+          backgroundColor: '#638bf1',
+          color: 'white',
+          textTransform: 'uppercase',
+          '&:hover': {
+            transform: 'translateY(2px)',
+            boxShadow: 'lg'
+          }
+        }}
+        disabled={gettingDirections}
+        onClick={handleGetDirections}
+      >
+        {gettingDirections ? 'Getting Directions...' : 'Get Directions'}
+      </Button>
     </LoadScript>
   );
 };

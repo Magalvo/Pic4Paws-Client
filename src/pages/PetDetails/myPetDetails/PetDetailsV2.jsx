@@ -355,7 +355,7 @@ export default function PetDetailsV2() {
               >
                 Other 4 Paws
               </Text>
-              <HorizontalScrollbar petType={petType} />
+              {/*  <HorizontalScrollbar petType={petType} /> */}
             </Box>
           </SimpleGrid>
         ) : (

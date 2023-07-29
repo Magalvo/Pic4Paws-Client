@@ -36,3 +36,7 @@ export const getUserFriends = async userId => {
 export const patchingFriend = async (userId, friendId) => {
   return axios.patch(`${baseURL}/${userId}/${friendId}`);
 };
+
+export const editUser = async updatedUser => {
+  return axios.put(`${baseURL}/${updatedUser._id}`, updatedUser);
+};

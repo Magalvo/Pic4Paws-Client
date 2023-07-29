@@ -23,8 +23,9 @@ import FlexBetween from '../../components/flexBetween';
 import { createPet, upload } from '../../api/pets.api';
 import MapComponent from '../../components/GoogleMaps';
 import TestMap from '../../components/TestMap';
+import { useNavigate } from 'react-router-dom';
 
-const PetForm = () => {
+const PetForm = ({ refreshList }) => {
   //const [photos, setPhotos] = useState([]);
   const [selectedImages, setSelectedImages] = useState([]);
   const [breedSelectionVisible, setBreedSelectionVisible] = useState(false);
@@ -34,6 +35,7 @@ const PetForm = () => {
   const [userLocation, setUserLocation] = useState(null);
   const { palette } = useTheme();
   const isNonMobile = useMediaQuery('(min-width: 600px)');
+  const navigate = useNavigate();
 
   const userId = localStorage.getItem('userId');
 
@@ -121,7 +123,10 @@ const PetForm = () => {
 
       const create = responseCreate.data;
       onSubmitProps.resetForm();
+
       console.log(create);
+
+      refreshList();
     } catch (error) {
       console.log('Error Updating the Project', error);
     }

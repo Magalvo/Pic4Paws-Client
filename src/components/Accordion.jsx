@@ -4,6 +4,7 @@ import AccordionDetails from '@mui/material/AccordionDetails';
 import Typography from '@mui/material/Typography';
 import AddIcon from '@mui/icons-material/Add';
 import PetForm from '../pages/widgets/PetForm';
+import { getPets } from '../api/pets.api';
 
 export default function FormAccordion({ refreshList }) {
   return (
@@ -17,7 +18,7 @@ export default function FormAccordion({ refreshList }) {
           <Typography align='center'>Create a New 4 Paws</Typography>
         </AccordionSummary>
         <AccordionDetails>
-          <PetForm />
+          <PetForm refreshList={refreshList} />
         </AccordionDetails>
       </Accordion>
     </div>

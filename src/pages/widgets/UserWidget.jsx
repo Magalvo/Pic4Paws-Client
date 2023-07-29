@@ -16,6 +16,7 @@ import UserImage from '../../components/userImage';
 import { getId } from '../../api/users.api';
 import Loading from '../../components/Loading';
 import LoaderDiv from '../../components/Skeleton';
+import { Button } from 'react-scroll';
 
 // eslint-disable-next-line react/prop-types
 const UserWidget = () => {
@@ -71,6 +72,7 @@ const UserWidget = () => {
             <Typography color={medium}>friends</Typography>
           </Box>
         </FlexBetween>
+
         <ManageAccountsOutlined />
       </FlexBetween>
 

@@ -171,7 +171,7 @@ export default function PetDetailsV2() {
                       {gender} {' ● '}
                       {age}
                       {' ● '}
-                      {petType === 'dog' ? (
+                      {petType === 'Dog' ? (
                         <Text
                           cursor='pointer'
                           color='teal.500'
@@ -336,6 +336,7 @@ export default function PetDetailsV2() {
                     transform: 'translateY(2px)',
                     boxShadow: 'lg'
                   }}
+                  onClick={() => navigate('/messenger')}
                 >
                   Contact
                 </Button>

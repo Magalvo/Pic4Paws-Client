@@ -28,16 +28,7 @@ const Adoption = () => {
             alignItems='stretch'
             spacing={3}
           >
-            <Grid item xs={12} sm={7}>
-              <PetsWidget />
-            </Grid>
-            <Grid item xs={12} sm={4}>
-              {/* <PetForm /> */}
-              {/* <NewPetForm /> */}
-              {/* <PetForm currentId={currentId} setCurrentId={setCurrentId} /> */}
-              {/* <CreatePaws /> */}
-              <FormAccordion />
-            </Grid>
+            <PetsWidget />
           </Grid>
         </Container>
       </Grow>

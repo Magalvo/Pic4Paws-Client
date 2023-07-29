@@ -26,6 +26,7 @@ import { useNavigate } from 'react-router-dom';
 import FlexBetween from '../../components/flexBetween';
 import { AuthContext } from '../../context/auth.context.jsx';
 import { NavLink } from 'react-router-dom';
+import Logo from '../../assets/images/logiz.png';
 
 const Navbar = () => {
   const [isMobileMenuToggled, setIsMobileMenuToggled] = useState(false);
@@ -42,26 +43,19 @@ const Navbar = () => {
   const background = theme.palette.background.default;
   const primaryLight = theme.palette.primary.light;
   const alt = theme.palette.background.alt;
+  const userId = localStorage.getItem('userId');
 
   const userName = stateUser?.firstName || '';
 
   return (
     <FlexBetween padding='1rem 6%' backgroundColor={alt}>
       <FlexBetween gap='1.75rem'>
-        <Typography
-          fontWeight='bold'
-          fontSize='clamp(1rem, 2rem, 2.25rem)'
-          color='primary'
-          onClick={() => navigate('/home')}
-          sx={{
-            '&:hover': {
-              color: primaryLight,
-              cursor: 'pointer'
-            }
+        <img
+          src={Logo}
+          style={{
+            width: '8rem'
           }}
-        >
-          Pic 4 Paws
-        </Typography>
+        />
         {isNonMobileScreens && (
           <FlexBetween
             backgroundColor={neutralLight}
@@ -80,6 +74,16 @@ const Navbar = () => {
       {/* DESKTOP NAV */}
       {isNonMobileScreens ? (
         <FlexBetween gap='2rem'>
+          <NavLink to='/pets'>Adopt</NavLink>
+          <IconButton onClick={() => navigate('/messenger')}>
+            <Message sx={{ fontSize: '25px', color: dark }} />
+          </IconButton>
+
+          <Notifications sx={{ fontSize: '25px' }} />
+          <IconButton onClick={() => navigate(`/users/${userId}`)}>
+            {' '}
+            <Help sx={{ fontSize: '25px', color: dark }} />
+          </IconButton>
           <IconButton onClick={() => dispatch(setMode())}>
             {theme.palette.mode === 'dark' ? (
               <DarkMode sx={{ fontSize: '25px' }} />
@@ -87,13 +91,7 @@ const Navbar = () => {
               <LightMode sx={{ color: dark, fontSize: '25px' }} />
             )}
           </IconButton>
-          <NavLink to='/pets'>Adopt</NavLink>
-          <IconButton onClick={() => navigate('/messenger')}>
-            <Message sx={{ fontSize: '25px', color: dark }} />
-          </IconButton>
 
-          <Notifications sx={{ fontSize: '25px' }} />
-          <Help sx={{ fontSize: '25px' }} />
           <FormControl variant='standard' value={userName}>
             <Select
               value={userName}

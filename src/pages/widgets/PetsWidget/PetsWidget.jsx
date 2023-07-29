@@ -5,6 +5,7 @@ import PetWidget from '../petWidget/PetWidget';
 import { Grid } from '@mui/material';
 import './Styles.css';
 import PetApiWidget from '../../widgets/petApiWidget/petApiWidget';
+import FormAccordion from '../../../components/Accordion';
 
 const PetsWidget = () => {
   const [pets, setPets] = useState([]);
@@ -122,22 +123,33 @@ const PetsWidget = () => {
     fetchMyPets();
   }, []);
 
+  const refreshList = () => {
+    fetchMyPets();
+  };
+
   return (
-    <div>
-      <h1>Pets</h1>
-      <Grid
-        sx={{ display: 'flex', alignItem: 'center' }}
-        container
-        alignItems='stretch'
-        spacing={3}
-      >
-        {pets.map(pet => (
-          <Grid item key={pet._id} xs={12} sm={6} md={6}>
-            <PetWidget pet={pet} />
+    <>
+      {/* <PetForm /> */}
+      {/* <NewPetForm /> */}
+      {/* <PetForm currentId={currentId} setCurrentId={setCurrentId} /> */}
+      {/* <CreatePaws /> */}
+
+      <Grid item xs={12} sm={7}>
+        <div>
+          <h1>Pets</h1>
+          <Grid
+            sx={{ display: 'flex', alignItem: 'center' }}
+            container
+            alignItems='stretch'
+            spacing={3}
+          >
+            {pets.map(pet => (
+              <Grid item key={pet._id} xs={12} sm={6} md={6}>
+                <PetWidget pet={pet} />
+              </Grid>
+            ))}
           </Grid>
-        ))}
-      </Grid>
-      {/* <Grid
+          {/* <Grid
         sx={{ display: 'flex', alignItem: 'center' }}
         container
         alignItems='stretch'
@@ -150,7 +162,12 @@ const PetsWidget = () => {
             </Grid>
           ))}
       </Grid> */}
-    </div>
+        </div>
+      </Grid>
+      <Grid item xs={12} sm={4}>
+        <FormAccordion refreshList={refreshList} />
+      </Grid>
+    </>
   );
 };
 

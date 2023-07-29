@@ -190,7 +190,7 @@ const Messenger = () => {
                     !{' '}
                   </h1>
 
-                  <p>Select a Pawsome friend and start chatting</p>
+                  <p>Select a Pawsome Friend </p>
                 </Typography>
               </>
             )}

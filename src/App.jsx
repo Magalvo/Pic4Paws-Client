@@ -22,6 +22,7 @@ import PetDetailsV2 from './pages/PetDetails/myPetDetails/PetDetailsV2';
 import CatBreedDetailsPage from './pages/CatBreeds/CatBreedDetailsPage';
 import DogBreedDetailsPage from './pages/DogBreeds/DogBreedDetailsPage';
 import TestMap from './components/TestMap';
+import EditUser from './pages/EditUser';
 
 function App() {
   const mode = useSelector(state => state.mode);
@@ -64,6 +65,7 @@ function App() {
               path='/breeds/dog-breeds/:breedName'
               element={<DogBreedDetailsPage />}
             />
+            <Route path='/users/:id' element={<EditUser />} />
 
             <Route path='/pets' element={<Adoption />} />
             <Route path='/pets/:id' element={<PetDetailsV2 />} />

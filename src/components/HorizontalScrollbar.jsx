@@ -62,7 +62,7 @@ const HorizontalScrollbar = ({ petType }) => {
       <div style={{ display: 'flex', gap: '1rem', padding: '1rem' }}>
         {pets.animals &&
           pets.animals.map(pet => (
-            <div key={pet._id} style={{ width: '300px' }}>
+            <div key={pet._id} style={{ minWidth: '300px' }}>
               <PetCard pet={pet} />
             </div>
           ))}

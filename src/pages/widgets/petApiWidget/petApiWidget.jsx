@@ -68,7 +68,7 @@ export default function PetApiWidget({ pet }) {
       />
       <div className='overlay'>
         {' '}
-        <Typography variant='h6'>{pet.age}</Typography>
+        <Typography variant='h6'>{pet.name}</Typography>
         <Typography variant='body2'>
           {moment(pet.published_at).fromNow()}
         </Typography>

@@ -13,7 +13,7 @@ const PetsWidget = () => {
   const [bearerToken, setBearerToken] = useState('');
 
   //________________________________ PET FINDER API PETS_______________________________//
-  /* const fetchBearerToken = async () => {
+  const fetchBearerToken = async () => {
     const storedToken = localStorage.getItem('bearerToken');
     const storedTokenExp = localStorage.getItem('bearerTokenExp');
 
@@ -107,7 +107,7 @@ const PetsWidget = () => {
       setBearerToken('');
     }
   }, []);
- */
+
   //________________________________ MY API PETS_______________________________________//
   const fetchMyPets = async () => {
     try {
@@ -149,19 +149,19 @@ const PetsWidget = () => {
               </Grid>
             ))}
           </Grid>
-          {/* <Grid
-        sx={{ display: 'flex', alignItem: 'center' }}
-        container
-        alignItems='stretch'
-        spacing={3}
-      >
-        {randomPet.animals &&
-          randomPet.animals.map(pet => (
-            <Grid item key={pet._id} xs={12} sm={6} md={6}>
-              <PetApiWidget pet={pet} />
-            </Grid>
-          ))}
-      </Grid> */}
+          <Grid
+            sx={{ display: 'flex', alignItem: 'center' }}
+            container
+            alignItems='stretch'
+            spacing={3}
+          >
+            {randomPet.animals &&
+              randomPet.animals.map(pet => (
+                <Grid item key={pet._id} xs={12} sm={6} md={6}>
+                  <PetApiWidget pet={pet} />
+                </Grid>
+              ))}
+          </Grid>
         </div>
       </Grid>
       <Grid item xs={12} sm={4}>

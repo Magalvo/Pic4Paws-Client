@@ -28,7 +28,7 @@ export default function PetWidget({ pet }) {
       />
       <div className='overlay'>
         {' '}
-        <Typography variant='h6'>{pet.userName}</Typography>
+        <Typography variant='h6'>{pet.petName}</Typography>
         <Typography variant='body2'>
           {moment(pet.createdAt).fromNow()}
         </Typography>

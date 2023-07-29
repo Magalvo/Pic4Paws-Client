@@ -38,6 +38,7 @@ import DogAdoptionModal from '../../../components/DogAdoptModal';
 import DogSupportModal from '../../../components/dogSupportModal';
 import CatAdoptionModal from '../../../components/CatAdoptModal';
 import CatSupportModal from '../../../components/catSupportModal';
+import HorizontalScrollbar from '../../../components/HorizontalScrollbar';
 
 export default function PetDetailsV2() {
   const [pet, setPet] = useState(null);
@@ -354,7 +355,7 @@ export default function PetDetailsV2() {
               >
                 Other 4 Paws
               </Text>
-              {/* <HorizontalScrollbar petType={petType} /> */}
+              <HorizontalScrollbar petType={petType} />
             </Box>
           </SimpleGrid>
         ) : (

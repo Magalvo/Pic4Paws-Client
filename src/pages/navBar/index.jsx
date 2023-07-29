@@ -27,6 +27,7 @@ import FlexBetween from '../../components/flexBetween';
 import { AuthContext } from '../../context/auth.context.jsx';
 import { NavLink } from 'react-router-dom';
 import Logo from '../../assets/images/logiz.png';
+import { Button } from 'react-scroll';
 
 const Navbar = () => {
   const [isMobileMenuToggled, setIsMobileMenuToggled] = useState(false);
@@ -50,12 +51,14 @@ const Navbar = () => {
   return (
     <FlexBetween padding='1rem 6%' backgroundColor={alt}>
       <FlexBetween gap='1.75rem'>
-        <img
-          src={Logo}
-          style={{
-            width: '8rem'
-          }}
-        />
+        <IconButton onClick={() => navigate('/home')}>
+          <img
+            src={Logo}
+            style={{
+              width: '8rem'
+            }}
+          />
+        </IconButton>
         {isNonMobileScreens && (
           <FlexBetween
             backgroundColor={neutralLight}

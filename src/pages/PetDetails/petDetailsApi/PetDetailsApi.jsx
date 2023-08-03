@@ -16,19 +16,15 @@ import {
 
 import { useMediaQuery } from '@chakra-ui/react';
 
-import { css } from '@emotion/react';
-
 import { useTheme } from '@mui/material';
 
-import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import Loading from '../../../components/Loading';
 import Navbar from '../../navBar/index';
 import Carrousel from '../../../components/ImageSlider';
-import MapComponent from '../../../components/GoogleMaps';
 import { getApiPet } from '../../../api/apiPets.api';
-import LocationMap from '../../../components/LocationMap';
+import HorizontalScrollbar from '../../../components/HorizontalScrollbar';
 
 export default function PetDetailsApi() {
   const [pet, setPet] = useState(null);
@@ -39,7 +35,6 @@ export default function PetDetailsApi() {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [largeImageUrls, setLargeImageUrls] = useState([]);
-  const [location, setLocation] = useState([]);
   const [petType, setPetType] = useState('');
   const { id } = useParams();
   const navigate = useNavigate();
@@ -76,7 +71,7 @@ export default function PetDetailsApi() {
       // Extract "large" URLs from each photo object in the "photos" array
       const largeUrlsArray = image.map(photo => photo.large);
       console.log(largeUrlsArray);
-      setLargeImageUrls(image); // Update the state with filtered URLs
+      setLargeImageUrls(largeUrlsArray); // Update the state with filtered URLs
     }
   }, [image]);
 
@@ -126,8 +121,8 @@ export default function PetDetailsApi() {
                 textAlign='left'
                 //mx='auto'
                 my={10}
-                maxW={{ base: '100%', md: '700px' }}
-                width={{ base: '100%', md: 'calc(100% - 2rem)' }}
+                maxW={{ base: '100%', md: '100%' }}
+                width={{ base: '100%', md: '100%' }}
               >
                 <Stack spacing={{ base: 6, md: 10 }}>
                   <Box as={'header'}>
@@ -192,7 +187,7 @@ export default function PetDetailsApi() {
                       >
                         {tags && tags.map(tag => `#${tag.trim()} `)}
                       </Text>
-                      <Text fontSize={'lg'}>{description}</Text>
+                      <Text fontSize={'lg'}>{pet.description}</Text>
                     </Box>
 
                     <Box>
@@ -253,7 +248,7 @@ export default function PetDetailsApi() {
               >
                 Other 4 Paws
               </Text>
-              {/* <HorizontalScrollbar petType={petType} /> */}
+              <HorizontalScrollbar petType={pet.type} />
             </Box>
           </SimpleGrid>
         ) : (

@@ -295,7 +295,7 @@ const Form = () => {
           </Box>
         )}
       </Formik>
-      <Box
+      {/* <Box
         sx={{
           justifyContent: 'space-evenly',
           mt: '1rem',
@@ -313,7 +313,7 @@ const Form = () => {
         >
           Login With Google
         </Button>
-      </Box>{' '}
+      </Box>{' '} */}
     </>
   );
 };

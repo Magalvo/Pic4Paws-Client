@@ -115,7 +115,6 @@ const Hero = () => {
 
       <WhoAreWe marginTop='5rem' />
       <Mission />
-      <Loading />
     </>
   );
 };

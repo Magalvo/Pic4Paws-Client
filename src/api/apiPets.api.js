@@ -28,12 +28,9 @@ export const getApiPets = async bearerToken => {
 };
 
 export const getApiPet = async (animalId, bearerToken) => {
-  return (
-    axios.get(`${petURL}/animals/${animalId}`),
-    {
-      headers: {
-        Authorization: `Bearer ${bearerToken}`
-      }
+  return axios.get(`${petURL}/animals/${animalId}`, {
+    headers: {
+      Authorization: `Bearer ${bearerToken}`
     }
-  );
+  });
 };
